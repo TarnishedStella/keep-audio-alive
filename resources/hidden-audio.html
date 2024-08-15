@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audio Player</title>
+</head>
+<body>
+  <audio id="audioPlayer"></audio>
+
+  <script>
+    const { ipcRenderer } = require('electron');
+    const audioPlayer = document.getElementById('audioPlayer');
+
+    ipcRenderer.on('audio-control', (event, { action, src, loop }) => {
+      if (action === 'play') {
+        audioPlayer.src = src;
+        audioPlayer.loop = loop;
+        audioPlayer.play();
+      } else if (action === 'pause') {
+        audioPlayer.pause();
+      } else if (action === 'stop') {
+        audioPlayer.pause();
+        audioPlayer.currentTime = 0;
+      }
+    });
+
+    audioPlayer.addEventListener('play', () => {
+      ipcRenderer.send('audio-status', 'playing');
+    });
+
+    audioPlayer.addEventListener('pause', () => {
+      ipcRenderer.send('audio-status', 'paused');
+    });
+
+    audioPlayer.addEventListener('ended', () => {
+      if (!audioPlayer.loop) {
+        ipcRenderer.send('audio-status', 'stopped');
+      }
+    });
+  </script>
+</body>
+</html>
