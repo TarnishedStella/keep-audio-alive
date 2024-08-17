@@ -1,8 +1,28 @@
-import Versions from './components/Versions'
-import electronLogo from './assets/electron.svg'
+import Versions from './components/Versions';
+import electronLogo from './assets/electron.svg';
+
+import audioString from './assets/error.mp3';
 
 function App(): JSX.Element {
-  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
+  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping');
+
+  async function listDevices() {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    console.log(devices);
+
+    const audioDevices = devices.filter((device) => device.kind === 'audiooutput');
+    console.log(audioDevices);
+
+    const audioDevice = devices.find((device) => device.kind === 'audiooutput' && device.label === 'default');
+
+    const audio = document.createElement('audio');
+    audio.src = audioString;
+    audio.play();
+    audio.loop = true
+
+    await audio.setSinkId(audioDevice!.deviceId);
+    console.log(`Audio is being output on ${audio.sinkId}`);
+  }
 
   return (
     <>
@@ -22,14 +42,14 @@ function App(): JSX.Element {
           </a>
         </div>
         <div className="action">
-          <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
+          <a target="_blank" rel="noreferrer" onClick={listDevices}>
             Send IPC
           </a>
         </div>
       </div>
       <Versions></Versions>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
