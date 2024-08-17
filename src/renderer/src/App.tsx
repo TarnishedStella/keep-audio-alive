@@ -1,53 +1,104 @@
-import Versions from './components/Versions';
-import electronLogo from './assets/electron.svg';
-
+import React, { useState } from 'react';
 import audioString from './assets/error.mp3';
 
 function App(): JSX.Element {
-  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping');
+  const [audioDevices, setAudioDevices] = useState<MediaDeviceInfo[]>([]);
+  const [selectedDevice, setSelectedDevice] = useState<MediaDeviceInfo | null>(null);
+  const [activeAudioDevices, setActiveAudioDevices] = useState<ActiveAudioDevice[]>([]);
 
-  async function listDevices() {
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    console.log(devices);
-
-    const audioDevices = devices.filter((device) => device.kind === 'audiooutput');
-    console.log(audioDevices);
-
-    const audioDevice = devices.find((device) => device.kind === 'audiooutput' && device.label === 'default');
-
-    const audio = document.createElement('audio');
-    audio.src = audioString;
-    audio.play();
-    audio.loop = true
-
-    await audio.setSinkId(audioDevice!.deviceId);
-    console.log(`Audio is being output on ${audio.sinkId}`);
+  interface ActiveAudioDevice {
+    mediaDeviceInfo: MediaDeviceInfo;
+    htmlAudioElement: HTMLAudioElement;
   }
+
+  const listDevices = async () => {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const filteredDevices = devices.filter((device) => device.kind === 'audiooutput');
+    setAudioDevices(filteredDevices);
+  };
+
+  const handleDeviceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedDeviceId = event.target.value;
+    const device = audioDevices.find((device) => device.deviceId === selectedDeviceId);
+    console.log(selectedDeviceId);
+    console.log(device);
+    setSelectedDevice(device || null);
+  };
+
+  const startAudio = async () => {
+    if (selectedDevice) {
+      const audio = new Audio(audioString);
+      audio.loop = true;
+      await audio.setSinkId(selectedDevice.deviceId);
+      audio.play();
+      const newActiveAudio: ActiveAudioDevice = {
+        htmlAudioElement: audio,
+        mediaDeviceInfo: selectedDevice,
+      };
+      setActiveAudioDevices([...activeAudioDevices, newActiveAudio]);
+    }
+  };
+
+  const stopAudio = (activeAudioDevice: ActiveAudioDevice) => {
+    console.log(activeAudioDevice.mediaDeviceInfo.deviceId);
+    activeAudioDevice.htmlAudioElement.pause();
+    activeAudioDevice.htmlAudioElement.remove();
+    setActiveAudioDevices(
+      activeAudioDevices.filter((x) => x.htmlAudioElement !== activeAudioDevice.htmlAudioElement),
+    );
+  };
+
+  const pauseAudio = (activeAudioDevice: ActiveAudioDevice) => {
+    activeAudioDevice.htmlAudioElement.pause();
+  };
+
+  const resumeAudio = (activeAudioDevice: ActiveAudioDevice) => {
+    activeAudioDevice.htmlAudioElement.play();
+  };
 
   return (
     <>
-      <img alt="logo" className="logo" src={electronLogo} />
-      <div className="creator">Powered by electron-vite</div>
-      <div className="text">
-        Build an Electron app with <span className="react">React</span>
-        &nbsp;and <span className="ts">TypeScript</span>
-      </div>
-      <p className="tip">
-        Please try pressing <code>F12</code> to open the devTool
-      </p>
-      <div className="actions">
-        <div className="action">
-          <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
-            Documentation
-          </a>
+      <header>
+        <h1>Keep Audio Alive</h1>
+      </header>
+
+      <div className="content">
+        <button onClick={listDevices}>Refresh</button>
+
+        {audioDevices.length > 0 && (
+          <div>
+            <label htmlFor="audio-devices">Select Audio Output Device: </label>
+            <select id="audio-devices" onChange={handleDeviceChange} defaultValue={1}>
+              {audioDevices.map((device) => (
+                <option key={device.deviceId} value={device.deviceId}>
+                  {device.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        <button onClick={startAudio} disabled={!selectedDevice}>
+          Start
+        </button>
+
+        <div>
+          <h2>Currently Active Devices</h2>
+          <div>
+            {activeAudioDevices.map((device) => (
+              <div key={device.mediaDeviceInfo.deviceId}>
+                <div></div>
+                <ul>
+                  <li>{device?.mediaDeviceInfo.label || 'Unknown Device'}</li>
+                </ul>
+                <button onClick={() => stopAudio(device)}>Stop Audio</button>
+                <button onClick={() => pauseAudio(device)}>Pause</button>
+                <button onClick={() => resumeAudio(device)}>Resume</button>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="action">
-          <a target="_blank" rel="noreferrer" onClick={listDevices}>
-            Send IPC
-          </a>
-        </div>
       </div>
-      <Versions></Versions>
     </>
   );
 }
