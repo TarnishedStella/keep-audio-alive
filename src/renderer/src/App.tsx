@@ -5,6 +5,7 @@ import ActiveAudioDevicesList from './components/ActiveAudioDevicesList';
 import Version from './components/Version';
 import { ActiveAudioDevice } from './Types';
 import { useNavigate } from '@tanstack/react-router';
+import useIpcListener from './hooks';
 
 function App(): ReactElement {
   const navigate = useNavigate({ from: '/posts/$postId' });
@@ -58,6 +59,28 @@ function App(): ReactElement {
       [activeAudioDevice.mediaDeviceInfo.deviceId]: false,
     }));
   };
+
+  function pauseActiveDevices() {
+    console.log('User is inactive!');
+    activeAudioDevices.forEach((device) => {
+      pauseAudio(device);
+    });
+  }
+
+  function resumeActiveDevices() {
+    console.log('User is active again!');
+    activeAudioDevices.forEach((device) => {
+      resumeAudio(device);
+    });
+  }
+
+  useIpcListener('user-inactive', (event, ...args) => {
+    pauseActiveDevices();
+  });
+
+  useIpcListener('user-active', (event, ...args) => {
+    resumeActiveDevices();
+  });
 
   return (
     <div className="main-container">

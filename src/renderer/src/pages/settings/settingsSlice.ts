@@ -12,7 +12,7 @@ const loadedSettings = await window.api.getSettings();
 console.log(loadedSettings);
 
 export const settingsSlice = createSlice({
-  name: 'counter',
+  name: 'settings',
   initialState: loadedSettings,
   reducers: {
     toggleOn: (state) => {

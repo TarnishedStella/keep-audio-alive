@@ -181,7 +181,7 @@ ipcMain.handle('get-app-version', async () => {
   return app.getVersion();
 });
 
-function loadSettings(): any {
+function loadSettings(): ApplicationSettings {
   try {
     if (fs.existsSync(settingsPath)) {
       const data = fs.readFileSync(settingsPath, 'utf-8');
@@ -198,8 +198,8 @@ function loadSettings(): any {
     }
   } catch (error) {
     console.error('Failed to load settings:', error);
+    throw error;
   }
-  return null;
 }
 
 ipcMain.handle('load-settings', () => {
@@ -220,19 +220,25 @@ function saveSettings(settings: ApplicationSettings): void {
   }
 }
 
-const INACTIVITY_THRESHOLD = 60; // 1 minute
-const CHECK_INTERVAL = 10000; // 10 seconds
+const INACTIVITY_THRESHOLD = 5; // 1 minute
+const CHECK_INTERVAL = 1000; // 10 seconds
 
 async function monitorInactivity() {
+  let wasPreviouslyIdle: boolean = false;
   while (true) {
     await new Promise((resolve) => setTimeout(resolve, CHECK_INTERVAL));
 
-    const isIdle = checkUserInactivity();
+    const isNowIdle = checkUserInactivity();
 
-    if (isIdle) {
+    if (isNowIdle && !wasPreviouslyIdle) {
       console.log('user is idle!');
-      // Send a message to the renderer process if the user is inactive
-      // mainWindow.webContents.send('user-inactive');
+      mainWindow!.webContents.send('user-inactive');
+      wasPreviouslyIdle = true;
+    }
+
+    if (wasPreviouslyIdle && !isNowIdle) {
+      wasPreviouslyIdle = false;
+      mainWindow!.webContents.send('user-active');
     }
   }
 }
@@ -250,18 +256,6 @@ function startMonitoring() {
   monitorInactivity().catch(console.error);
 }
 
-// async function checkUserInactivity(): Promise<boolean> {
-//   return new Promise((resolve) => {
-//     const idleTime = powerMonitor.getSystemIdleTime();
-//     if (idleTime > INACTIVITY_THRESHOLD){
-//       return true;
-//     }
-//     idle.start(INACTIVITY_THRESHOLD, (isIdle) => {
-//       idle.stop(); // Stop the idle monitoring after the check
-//       resolve(isIdle);
-//     });
-//   });
-// }
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
