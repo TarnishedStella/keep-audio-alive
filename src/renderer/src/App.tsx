@@ -1,10 +1,22 @@
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import audioString from './assets/error.mp3';
+import { Card, Container, Flex, Grid, IconButton, Select, Text } from '@radix-ui/themes';
+import { PauseIcon, PlusIcon, ReloadIcon, ResumeIcon, StopIcon } from '@radix-ui/react-icons';
 
-function App(): JSX.Element {
+function App(): ReactElement {
   const [audioDevices, setAudioDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedDevice, setSelectedDevice] = useState<MediaDeviceInfo | null>(null);
   const [activeAudioDevices, setActiveAudioDevices] = useState<ActiveAudioDevice[]>([]);
+
+  const [playbackStatus, setPlaybackStatus] = useState<Record<string, boolean>>(
+    activeAudioDevices.reduce(
+      (acc, device) => {
+        acc[device.mediaDeviceInfo.deviceId] = device.htmlAudioElement.paused;
+        return acc;
+      },
+      {} as Record<string, boolean>,
+    ),
+  );
 
   interface ActiveAudioDevice {
     mediaDeviceInfo: MediaDeviceInfo;
@@ -25,6 +37,13 @@ function App(): JSX.Element {
     setSelectedDevice(device || null);
   };
 
+  const handleDeviceChange2 = (selectedDeviceId: string) => {
+    const device = audioDevices.find((device) => device.deviceId === selectedDeviceId);
+    console.log(selectedDeviceId);
+    console.log(device);
+    setSelectedDevice(device || null);
+  };
+
   const startAudio = async () => {
     if (selectedDevice) {
       const audio = new Audio(audioString);
@@ -36,6 +55,10 @@ function App(): JSX.Element {
         mediaDeviceInfo: selectedDevice,
       };
       setActiveAudioDevices([...activeAudioDevices, newActiveAudio]);
+      setPlaybackStatus((prevState) => ({
+        ...prevState,
+        [newActiveAudio.mediaDeviceInfo.deviceId]: false,
+      }));
     }
   };
 
@@ -46,43 +69,115 @@ function App(): JSX.Element {
     setActiveAudioDevices(
       activeAudioDevices.filter((x) => x.htmlAudioElement !== activeAudioDevice.htmlAudioElement),
     );
+    setPlaybackStatus((prevState) => {
+      const { [activeAudioDevice.mediaDeviceInfo.deviceId]: _, ...newState } = prevState;
+      return newState;
+    });
   };
 
   const pauseAudio = (activeAudioDevice: ActiveAudioDevice) => {
+    console.log(activeAudioDevice.htmlAudioElement.paused);
     activeAudioDevice.htmlAudioElement.pause();
+    console.log(activeAudioDevice.htmlAudioElement.paused);
+    activeAudioDevice.htmlAudioElement.currentTime = 0;
+    setPlaybackStatus((prevState) => ({
+      ...prevState,
+      [activeAudioDevice.mediaDeviceInfo.deviceId]: true,
+    }));
   };
 
   const resumeAudio = (activeAudioDevice: ActiveAudioDevice) => {
     activeAudioDevice.htmlAudioElement.play();
+    setPlaybackStatus((prevState) => ({
+      ...prevState,
+      [activeAudioDevice.mediaDeviceInfo.deviceId]: false,
+    }));
   };
 
   return (
-    <>
-      <header>
-        <h1>Keep Audio Alive</h1>
-      </header>
+    <div className="main-container">
+      <Flex direction="column" gap="1rem" align={'center'}>
+        <Text as="div" size="6" weight="bold">
+          Keep Audio Alive
+        </Text>
+        <Flex direction="row" gap={'0.5rem'} >
+          {audioDevices.length > 0 && (
+            <Flex direction="column" width="50vw" minWidth={'200px'}>
+              <Select.Root size={'2'} onValueChange={handleDeviceChange2}>
+                <Select.Trigger radius="large" placeholder="Select an Audio Device" />
+                <Select.Content position="popper">
+                  {audioDevices.map((device) => (
+                    <Select.Item key={device.deviceId} value={device.deviceId}>
+                      {device.label}
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select.Root>
+            </Flex>
+          )}
 
-      <div className="content">
-        <button onClick={listDevices}>Refresh</button>
+          <IconButton onClick={listDevices} variant="soft" size="2" color="gray">
+            <ReloadIcon width="18" height="18" />
+          </IconButton>
 
-        {audioDevices.length > 0 && (
-          <div>
-            <label htmlFor="audio-devices">Select Audio Output Device: </label>
-            <select id="audio-devices" onChange={handleDeviceChange} defaultValue={1}>
-              {audioDevices.map((device) => (
-                <option key={device.deviceId} value={device.deviceId}>
-                  {device.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
+          <IconButton onClick={startAudio} variant="soft" size="2" color="green">
+            <PlusIcon width="18" height="18" />
+          </IconButton>
+        </Flex>
 
-        <button onClick={startAudio} disabled={!selectedDevice}>
-          Start
-        </button>
+        <Card variant="surface" size={'1'} >
+          <Flex direction={'column'} gap={'1rem'}>
+            {activeAudioDevices.length === 0 ? (
+              <Text as="div" size="2" align={'center'} weight="bold">
+                No Active Devices
+              </Text>
+            ) : (
+              <Text as="div" size="2" align={'center'} weight="bold">
+                Currently Active Devices
+              </Text>
+            )}
 
-        <div>
+            {activeAudioDevices.map((device) => (
+              <Grid columns="1" gap="3" width="auto">
+                <Flex key={device.mediaDeviceInfo.deviceId} gap={'0.5rem'}>
+                  <Text>{device?.mediaDeviceInfo.label || 'Unknown Device'}</Text>
+
+                  <Flex gap={'0.5rem'}>
+                    <IconButton
+                      onClick={() => stopAudio(device)}
+                      variant="soft"
+                      size="2"
+                      color="red"
+                    >
+                      <StopIcon width="18" height="18" />
+                    </IconButton>
+
+                    {playbackStatus[device.mediaDeviceInfo.deviceId] ? (
+                      <IconButton
+                        onClick={() => resumeAudio(device)}
+                        variant="soft"
+                        size="2"
+                        color="green"
+                      >
+                        <ResumeIcon width="18" height="18" />
+                      </IconButton>
+                    ) : (
+                      <IconButton
+                        onClick={() => pauseAudio(device)}
+                        variant="soft"
+                        size="2"
+                        color="red"
+                      >
+                        <PauseIcon width="18" height="18" />
+                      </IconButton>
+                    )}
+                  </Flex>
+                </Flex>
+              </Grid>
+            ))}
+          </Flex>
+        </Card>
+        {/* <div>
           <h2>Currently Active Devices</h2>
           <div>
             {activeAudioDevices.map((device) => (
@@ -97,9 +192,9 @@ function App(): JSX.Element {
               </div>
             ))}
           </div>
-        </div>
-      </div>
-    </>
+        </div> */}
+      </Flex>
+    </div>
   );
 }
 
