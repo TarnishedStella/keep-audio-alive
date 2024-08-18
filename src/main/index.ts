@@ -20,8 +20,6 @@ let isPlaying = false;
 const settings = loadSettings();
 
 function createWindow(): void {
-  loadSettings();
-
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 900,
@@ -83,16 +81,18 @@ const createTray = () => {
 const UpdateTrayContextMenu = () => {
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: 'Start',
+      label: 'Resume',
       click: () => {
-        audioWindow?.webContents.send('audio-control', { action: 'play', src: audio, loop: true });
+        mainWindow?.webContents.send('resume-all');
+        isPlaying = true;
       },
       enabled: !isPlaying,
     },
     {
-      label: 'Stop',
+      label: 'Pause',
       click: () => {
-        audioWindow?.webContents.send('audio-control', { action: 'stop' });
+        mainWindow?.webContents.send('pause-all');
+        isPlaying = false;
       },
       enabled: isPlaying,
     },
@@ -129,14 +129,9 @@ app.whenReady().then(async () => {
     optimizer.watchWindowShortcuts(window);
   });
 
-  // IPC test
-  ipcMain.on('ping', () => console.log('pong'));
-
   createWindow();
   createTray();
   createAudioWindow();
-
-  // console.log(audio);
 
   mainWindow?.on('minimize', (event) => {
     event.preventDefault();
@@ -171,6 +166,17 @@ app.on('window-all-closed', (event) => {
 app.on('before-quit', () => {
   isQuitting = true;
 });
+
+ipcMain.handle('playing-audio', (event) => {
+  isPlaying = true
+  UpdateTrayContextMenu();
+});
+
+ipcMain.handle('not-playing-audio', (event) => {
+  isPlaying = false
+  UpdateTrayContextMenu();
+});
+
 
 ipcMain.on('audio-status', (event, status) => {
   isPlaying = status === 'playing';

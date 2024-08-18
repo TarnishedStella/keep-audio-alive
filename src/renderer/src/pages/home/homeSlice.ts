@@ -49,6 +49,24 @@ export const homeSlice = createSlice({
     },
     updatePlaybackStatus: (state, action: PayloadAction<IPlaybackStatus>) => {
       state.audioManager.devicePlaybackStatuses[action.payload.deviceId] = action.payload;
+
+      if (state.audioManager.activeAudioDevices.length > 0) {
+        // if anything is playing, send a message to the main process ot update the tray icon
+        const isPlaying = state.audioManager.activeAudioDevices.some((device) => {
+          const playbackStatus =
+            state.audioManager.devicePlaybackStatuses[device.mediaDeviceInfo.deviceId];
+          return playbackStatus?.playbackState === PlaybackState.Playing;
+        });
+
+        console.log(isPlaying);
+        if (isPlaying) {
+          console.log('isPlaying');
+          window.api.playingAudio();
+        } else {
+          console.log('isNotPlaying');
+          window.api.notPlayingAudio();
+        }
+      }
     },
   },
 });

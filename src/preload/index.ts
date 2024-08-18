@@ -7,6 +7,8 @@ const api = {
   getAppVersion: () => ipcRenderer.invoke('get-app-version'),
   getSettings: () => ipcRenderer.invoke('load-settings'),
   saveSettings: (settingsData: ApplicationSettings) => ipcRenderer.invoke('save-settings', settingsData),
+  playingAudio: () => ipcRenderer.invoke('playing-audio'),
+  notPlayingAudio: () => ipcRenderer.invoke('not-playing-audio'),
   on: (channel: string, listener: (...args: any[]) => void) => {
     ipcRenderer.on(channel, listener);
     return () => ipcRenderer.removeListener(channel, listener);

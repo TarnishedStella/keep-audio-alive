@@ -15,10 +15,7 @@ import {
   updatePlaybackStatus,
 } from './pages/home/homeSlice';
 import { useAudioRefs } from './components/AudioContext';
-import {
-  selectActiveAudioDevices,
-  selectDevicePlaybackStatuses,
-} from './pages/home/selectors';
+import { selectActiveAudioDevices, selectDevicePlaybackStatuses } from './pages/home/selectors';
 import { selectIsInactivityToggled } from './pages/settings/selectors';
 
 function App(): ReactElement {
@@ -100,37 +97,52 @@ function App(): ReactElement {
     );
   };
 
-  function pauseActiveDevices() {
-    console.log('User is inactive!');
-    if (isInactivityToggled) {
-      console.log('pausing devices');
-      activeAudioDevices.forEach((device) => {
-        const playbackState = devicePlaybackStatuses[device.mediaDeviceInfo.deviceId].playbackState;
-        if (playbackState === PlaybackState.Playing) {
-          pauseAudio(device, false);
-        }
-      });
-    }
+  function pauseActiveDevices(userPaused: boolean) {
+    console.log('pausing devices');
+    activeAudioDevices.forEach((device) => {
+      const playbackState = devicePlaybackStatuses[device.mediaDeviceInfo.deviceId].playbackState;
+      if (playbackState === PlaybackState.Playing) {
+        pauseAudio(device, userPaused);
+      }
+    });
   }
 
   function resumeActiveDevices() {
-    console.log('User is active again!');
-    if (isInactivityToggled) {
-      activeAudioDevices.forEach((device) => {
-        const playbackState = devicePlaybackStatuses[device.mediaDeviceInfo.deviceId].playbackState;
-        if (playbackState === PlaybackState.IdlePaused) {
-          resumeAudio(device);
-        }
-      });
-    }
+    console.log('resuming devices');
+    activeAudioDevices.forEach((device) => {
+      const playbackState = devicePlaybackStatuses[device.mediaDeviceInfo.deviceId].playbackState;
+      if (playbackState === PlaybackState.IdlePaused) {
+        resumeAudio(device);
+      }
+    });
   }
 
   useIpcListener('user-inactive', (event, ...args) => {
-    pauseActiveDevices();
+    console.log('User is inactive!');
+    if (isInactivityToggled) {
+      pauseActiveDevices(false);
+    }
   });
 
   useIpcListener('user-active', (event, ...args) => {
-    resumeActiveDevices();
+    console.log('User is active again!');
+    if (isInactivityToggled) {
+      resumeActiveDevices();
+    }
+  });
+
+  useIpcListener('pause-all', (event, ...args) => {
+    console.log('pause-all');
+    activeAudioDevices.forEach((device) => {
+      pauseAudio(device, true);
+    });
+  });
+
+  useIpcListener('resume-all', (event, ...args) => {
+    console.log('resume-all');
+    activeAudioDevices.forEach((device) => {
+      resumeAudio(device);
+    });
   });
 
   return (
