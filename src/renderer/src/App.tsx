@@ -108,6 +108,10 @@ function App(): ReactElement {
     }));
   };
 
+  function filterAudioDeviceLabel(label: string){
+    return label.replace(/\s*\([a-fA-F0-9]+:[a-fA-F0-9]+\)$/, '');
+  }
+
   return (
     <div className="main-container">
       <div className="component-container">
@@ -125,7 +129,7 @@ function App(): ReactElement {
               <Select.Content className="SelectContent" position="popper" sideOffset={5}>
                 {audioDevices.map((device) => (
                   <Select.Item key={device.deviceId} value={device.deviceId}>
-                    {device.label}
+                    {filterAudioDeviceLabel(device.label)}
                   </Select.Item>
                 ))}
               </Select.Content>

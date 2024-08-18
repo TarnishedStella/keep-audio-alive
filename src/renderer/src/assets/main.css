@@ -236,7 +236,6 @@ code {
   gap: 0.5rem;
   padding: 2rem;
   width: 800px;
-  min-width: 450px;
   flex-direction: column;
   max-width: 80vw;
 }
