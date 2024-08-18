@@ -171,17 +171,76 @@ code {
   }
 }
 
-
-
-
-.main-container{
+.main-container {
+  display: flex;
+  gap: 0.5rem;
   padding: 2rem;
   width: 100vw;
-  display: flex;
+  min-width: 450px;
   flex-direction: column;
   align-items: center;
   height: 100vh;
 }
+
+.selector-container {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex-direction: row;
+}
+
+/* .SelectContent {
+  width: var(--radix-select-trigger-width);
+} */
+
+.SelectTrigger {
+  width: 1000px;
+}
+
+.selection-box-trigger {
+  width: 100% !important;
+}
+
+.selection-box {
+  display: flex;
+  width: 100%;
+}
+
+.selection-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.card-grid {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card-title {
+  flex: 5;
+}
+
+.card-buttons {
+  flex: 1;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: end;
+}
+
+.component-container {
+  display: flex;
+  gap: 0.5rem;
+  padding: 2rem;
+  width: 800px;
+  min-width: 450px;
+  flex-direction: column;
+  max-width: 80vw;
+}
+
 /*
 .audio-selection {
   display: flex;
