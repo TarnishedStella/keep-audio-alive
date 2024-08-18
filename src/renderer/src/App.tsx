@@ -1,6 +1,6 @@
 import React, { ReactElement, useState } from 'react';
 import audioString from './assets/error.mp3';
-import { Card, Container, Flex, Grid, IconButton, Select, Text } from '@radix-ui/themes';
+import { Box, Card, Container, Flex, Grid, IconButton, Select, Text } from '@radix-ui/themes';
 import { PauseIcon, PlusIcon, ReloadIcon, ResumeIcon, StopIcon } from '@radix-ui/react-icons';
 
 function App(): ReactElement {
@@ -100,9 +100,10 @@ function App(): ReactElement {
         <Text as="div" size="6" weight="bold">
           Keep Audio Alive
         </Text>
-        <Flex direction="row" gap={'0.5rem'} >
+
+        <Grid gap={'0.5rem'} columns="80% 20%" width="50vw">
           {audioDevices.length > 0 && (
-            <Flex direction="column" width="50vw" minWidth={'200px'}>
+            <Flex direction="column">
               <Select.Root size={'2'} onValueChange={handleDeviceChange2}>
                 <Select.Trigger radius="large" placeholder="Select an Audio Device" />
                 <Select.Content position="popper">
@@ -115,17 +116,26 @@ function App(): ReactElement {
               </Select.Root>
             </Flex>
           )}
+          <Flex gap={'2'}>
+            <IconButton onClick={listDevices} variant="soft" size="2" color="gray">
+              <ReloadIcon width="18" height="18" />
+            </IconButton>
+            <IconButton onClick={startAudio} variant="soft" size="2" color="green">
+              <PlusIcon width="18" height="18" />
+            </IconButton>
+          </Flex>
+        </Grid>
 
-          <IconButton onClick={listDevices} variant="soft" size="2" color="gray">
-            <ReloadIcon width="18" height="18" />
-          </IconButton>
-
-          <IconButton onClick={startAudio} variant="soft" size="2" color="green">
-            <PlusIcon width="18" height="18" />
-          </IconButton>
-        </Flex>
-
-        <Card variant="surface" size={'1'} >
+        {/* <Card variant="surface" size={'1'}> */}
+        <Box
+          style={{
+            width: '100%',
+            maxWidth: '100%',
+            padding: '1rem',
+            background: 'var(--gray-a2)',
+            borderRadius: 'var(--radius-3)',
+          }}
+        >
           <Flex direction={'column'} gap={'1rem'}>
             {activeAudioDevices.length === 0 ? (
               <Text as="div" size="2" align={'center'} weight="bold">
@@ -176,7 +186,8 @@ function App(): ReactElement {
               </Grid>
             ))}
           </Flex>
-        </Card>
+        </Box>
+        {/* </Card> */}
         {/* <div>
           <h2>Currently Active Devices</h2>
           <div>
