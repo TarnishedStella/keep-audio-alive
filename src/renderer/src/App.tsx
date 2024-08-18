@@ -6,12 +6,27 @@ import Version from './components/Version';
 import { ActiveAudioDevice } from './Types';
 import { useNavigate } from '@tanstack/react-router';
 import useIpcListener from './hooks';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from './store';
+import { addActiveAudioDevice, removeActiveAudioDevice, setSelectedDevice, updatePlaybackStatus } from './pages/home/homeSlice';
 
 function App(): ReactElement {
   const navigate = useNavigate({ from: '/posts/$postId' });
-  const [selectedDevice, setSelectedDevice] = useState<MediaDeviceInfo | null>(null);
-  const [activeAudioDevices, setActiveAudioDevices] = useState<ActiveAudioDevice[]>([]);
-  const [playbackStatus, setPlaybackStatus] = useState<Record<string, boolean>>({});
+
+  const dispatch = useDispatch();
+  const selectedDevice = useSelector((state: RootState) => state.home.audioManager.selectedDevice);
+  const activeAudioDevices = useSelector(
+    (state: RootState) => state.home.audioManager.activeAudioDevices,
+  );
+  const playbackStatus = useSelector((state: RootState) => state.home.audioManager.playbackStatus);
+
+  // const [selectedDevice, setSelectedDevice] = useState<MediaDeviceInfo | null>(null);
+  // const [activeAudioDevices, setActiveAudioDevices] = useState<ActiveAudioDevice[]>([]);
+  // const [playbackStatus, setPlaybackStatus] = useState<Record<string, boolean>>({});
+
+  const handleDeviceChange = (device: MediaDeviceInfo | null) => {
+    dispatch(setSelectedDevice(device));
+  };
 
   const startAudio = async () => {
     if (selectedDevice) {
@@ -23,41 +38,72 @@ function App(): ReactElement {
         htmlAudioElement: audio,
         mediaDeviceInfo: selectedDevice,
       };
-      setActiveAudioDevices([...activeAudioDevices, newActiveAudio]);
-      setPlaybackStatus((prevState) => ({
-        ...prevState,
-        [newActiveAudio.mediaDeviceInfo.deviceId]: false,
-      }));
+      // setActiveAudioDevices([...activeAudioDevices, newActiveAudio]);
+
+      dispatch(addActiveAudioDevice(newActiveAudio))
+      dispatch(
+        updatePlaybackStatus({
+          deviceId: newActiveAudio.mediaDeviceInfo.deviceId,
+          isPaused: false,
+        }),
+      );
+      // setPlaybackStatus((prevState) => ({
+      //   ...prevState,
+      //   [newActiveAudio.mediaDeviceInfo.deviceId]: false,
+      // }));
     }
   };
 
   const stopAudio = (activeAudioDevice: ActiveAudioDevice) => {
     activeAudioDevice.htmlAudioElement.pause();
     activeAudioDevice.htmlAudioElement.remove();
-    setActiveAudioDevices(
-      activeAudioDevices.filter((x) => x.htmlAudioElement !== activeAudioDevice.htmlAudioElement),
-    );
-    setPlaybackStatus((prevState) => {
-      const { [activeAudioDevice.mediaDeviceInfo.deviceId]: _, ...newState } = prevState;
-      return newState;
-    });
+
+    dispatch(removeActiveAudioDevice(activeAudioDevice));
+    // dispatch(
+    //   updatePlaybackStatus({
+    //     deviceId: activeAudioDevice.mediaDeviceInfo.deviceId,
+    //     isPaused: false,
+    //   }),
+    // );
+
+    // setActiveAudioDevices(
+    //   activeAudioDevices.filter((x) => x.htmlAudioElement !== activeAudioDevice.htmlAudioElement),
+    // );
+    // setPlaybackStatus((prevState) => {
+    //   const { [activeAudioDevice.mediaDeviceInfo.deviceId]: _, ...newState } = prevState;
+    //   return newState;
+    // });
   };
 
   const pauseAudio = (activeAudioDevice: ActiveAudioDevice) => {
     activeAudioDevice.htmlAudioElement.pause();
     activeAudioDevice.htmlAudioElement.currentTime = 0;
-    setPlaybackStatus((prevState) => ({
-      ...prevState,
-      [activeAudioDevice.mediaDeviceInfo.deviceId]: true,
-    }));
+
+    dispatch(
+      updatePlaybackStatus({
+        deviceId: activeAudioDevice.mediaDeviceInfo.deviceId,
+        isPaused: true,
+      }),
+    );
+    // setPlaybackStatus((prevState) => ({
+    //   ...prevState,
+    //   [activeAudioDevice.mediaDeviceInfo.deviceId]: true,
+    // }));
   };
 
   const resumeAudio = (activeAudioDevice: ActiveAudioDevice) => {
     activeAudioDevice.htmlAudioElement.play();
-    setPlaybackStatus((prevState) => ({
-      ...prevState,
-      [activeAudioDevice.mediaDeviceInfo.deviceId]: false,
-    }));
+
+    dispatch(
+      updatePlaybackStatus({
+        deviceId: activeAudioDevice.mediaDeviceInfo.deviceId,
+        isPaused: false,
+      }),
+    );
+    // setPlaybackStatus((prevState) => ({
+    //   ...prevState,
+    //   [activeAudioDevice.mediaDeviceInfo.deviceId]: false,
+    // }));
   };
 
   function pauseActiveDevices() {
@@ -90,7 +136,7 @@ function App(): ReactElement {
             Keep Audio Alive
           </Text>
         </Box> */}
-        <AudioDeviceSelector onSelectDevice={setSelectedDevice} onStartAudio={startAudio} />
+        <AudioDeviceSelector onSelectDevice={handleDeviceChange} onStartAudio={startAudio} />
         <ActiveAudioDevicesList
           activeAudioDevices={activeAudioDevices}
           playbackStatus={playbackStatus}

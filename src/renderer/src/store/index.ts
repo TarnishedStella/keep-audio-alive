@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import settingsReducer from '../pages/settings/settingsSlice'
+import settingsReducer, { SETTINGS_SLICE_NAME } from '../pages/settings/settingsSlice'
+import audioReducer, { HOME_SLICE_NAME } from '../pages/home/homeSlice';
 
 const store = configureStore({
   reducer: {
-    settings: settingsReducer
+    [SETTINGS_SLICE_NAME]: settingsReducer,
+    [HOME_SLICE_NAME]: audioReducer
   },
 });
 

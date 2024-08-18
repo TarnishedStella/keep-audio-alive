@@ -3,6 +3,8 @@ import { ipcRenderer } from 'electron';
 
 // import {ApplicationSettings} from '../../../../main/types';
 
+export const SETTINGS_SLICE_NAME = 'settings';
+
 export interface ISettingsSlice {
   inactivityToggle: boolean;
   inactivityTimer: number;
@@ -12,7 +14,7 @@ const loadedSettings = await window.api.getSettings();
 console.log(loadedSettings);
 
 export const settingsSlice = createSlice({
-  name: 'settings',
+  name: SETTINGS_SLICE_NAME,
   initialState: loadedSettings,
   reducers: {
     toggleOn: (state) => {
