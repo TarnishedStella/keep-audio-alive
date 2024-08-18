@@ -5,16 +5,21 @@ import { ActiveAudioDevice } from '../../Types';
 
 export const HOME_SLICE_NAME = 'home';
 
-export interface IPlaybackStatus{
+export enum PlaybackState {
+  Playing,
+  IdlePaused,
+  UserPaused,
+}
+
+export interface IPlaybackStatus {
   deviceId: string;
-  isPaused: boolean;
-  userPaused: boolean;
+  playbackState: PlaybackState
 }
 
 interface AudioManager {
   selectedDevice: MediaDeviceInfo | null;
   activeAudioDevices: ActiveAudioDevice[];
-  playbackStatus: Record<string, IPlaybackStatus>;
+  devicePlaybackStatuses: Record<string, IPlaybackStatus>;
 }
 
 export interface IHomeSlice {
@@ -22,7 +27,7 @@ export interface IHomeSlice {
 }
 
 const initialState: IHomeSlice = {
-  audioManager: { selectedDevice: null, activeAudioDevices: [], playbackStatus: {} },
+  audioManager: { selectedDevice: null, activeAudioDevices: [], devicePlaybackStatuses: {} },
 };
 
 export const homeSlice = createSlice({
@@ -42,15 +47,12 @@ export const homeSlice = createSlice({
         (device) => device.mediaDeviceInfo.deviceId !== action.payload.mediaDeviceInfo.deviceId,
       );
 
-      delete state.audioManager.playbackStatus[action.payload.mediaDeviceInfo.deviceId];
+      delete state.audioManager.devicePlaybackStatuses[action.payload.mediaDeviceInfo.deviceId];
       // const { [action.payload.mediaDeviceInfo.deviceId]: _, ...newPlaybackStatus } = state.audioManager.playbackStatus;
       // state.audioManager.playbackStatus = newPlaybackStatus;
     },
-    updatePlaybackStatus: (
-      state,
-      action: PayloadAction<IPlaybackStatus>,
-    ) => {
-      state.audioManager.playbackStatus[action.payload.deviceId] = action.payload;
+    updatePlaybackStatus: (state, action: PayloadAction<IPlaybackStatus>) => {
+      state.audioManager.devicePlaybackStatuses[action.payload.deviceId] = action.payload;
     },
   },
 });

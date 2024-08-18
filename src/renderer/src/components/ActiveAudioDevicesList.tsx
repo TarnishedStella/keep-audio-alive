@@ -2,7 +2,7 @@ import React from 'react';
 import { Flex, Text } from '@radix-ui/themes';
 import ActiveAudioDeviceCard from './ActiveAudioDeviceCard';
 import { ActiveAudioDevice } from '@renderer/Types';
-import { IPlaybackStatus } from '@renderer/pages/home/homeSlice';
+import { IPlaybackStatus, PlaybackState } from '@renderer/pages/home/homeSlice';
 
 interface ActiveAudioDevicesListProps {
   activeAudioDevices: ActiveAudioDevice[];
@@ -46,7 +46,7 @@ const ActiveAudioDevicesList: React.FC<ActiveAudioDevicesListProps> = ({
                   onPause={() => onPause(device)}
                   onResume={() => onResume(device)}
                   onStop={() => onStop(device)}
-                  isPaused={playbackStatus[device.mediaDeviceInfo.deviceId].isPaused}
+                  isPaused={playbackStatus[device.mediaDeviceInfo.deviceId].playbackState !== PlaybackState.Playing}
                 />
               ))}
             </Flex>

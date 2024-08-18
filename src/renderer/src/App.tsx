@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './store';
 import {
   addActiveAudioDevice,
+  PlaybackState,
   removeActiveAudioDevice,
   updatePlaybackStatus,
 } from './pages/home/homeSlice';
@@ -24,7 +25,9 @@ function App(): ReactElement {
   const activeAudioDevices = useSelector(
     (state: RootState) => state.home.audioManager.activeAudioDevices,
   );
-  const playbackStatus = useSelector((state: RootState) => state.home.audioManager.playbackStatus);
+  const devicePlaybackStatuses = useSelector(
+    (state: RootState) => state.home.audioManager.devicePlaybackStatuses,
+  );
 
   const isInactivityToggled = useSelector((state: RootState) => state.settings.inactivityToggle);
 
@@ -52,8 +55,7 @@ function App(): ReactElement {
       dispatch(
         updatePlaybackStatus({
           deviceId: newActiveAudio.mediaDeviceInfo.deviceId,
-          isPaused: false,
-          userPaused: false,
+          playbackState: PlaybackState.Playing,
         }),
       );
     }
@@ -81,8 +83,7 @@ function App(): ReactElement {
     dispatch(
       updatePlaybackStatus({
         deviceId: activeAudioDevice.mediaDeviceInfo.deviceId,
-        isPaused: true,
-        userPaused: userPaused,
+        playbackState: userPaused ? PlaybackState.UserPaused : PlaybackState.IdlePaused,
       }),
     );
   };
@@ -94,19 +95,18 @@ function App(): ReactElement {
     dispatch(
       updatePlaybackStatus({
         deviceId: activeAudioDevice.mediaDeviceInfo.deviceId,
-        isPaused: false,
-        userPaused: false,
+        playbackState: PlaybackState.Playing,
       }),
     );
   };
 
   function pauseActiveDevices() {
     console.log('User is inactive!');
-
     if (isInactivityToggled) {
       console.log('pausing devices');
       activeAudioDevices.forEach((device) => {
-        if (!playbackStatus[device.mediaDeviceInfo.deviceId].userPaused) {
+        const playbackState = devicePlaybackStatuses[device.mediaDeviceInfo.deviceId].playbackState;
+        if (playbackState === PlaybackState.Playing) {
           pauseAudio(device, false);
         }
       });
@@ -115,11 +115,14 @@ function App(): ReactElement {
 
   function resumeActiveDevices() {
     console.log('User is active again!');
-    activeAudioDevices.forEach((device) => {
-      if (!playbackStatus[device.mediaDeviceInfo.deviceId].userPaused) {
-        resumeAudio(device);
-      }
-    });
+    if (isInactivityToggled) {
+      activeAudioDevices.forEach((device) => {
+        const playbackState = devicePlaybackStatuses[device.mediaDeviceInfo.deviceId].playbackState;
+        if (playbackState === PlaybackState.IdlePaused) {
+          resumeAudio(device);
+        }
+      });
+    }
   }
 
   useIpcListener('user-inactive', (event, ...args) => {
@@ -141,7 +144,7 @@ function App(): ReactElement {
         <AudioDeviceSelector onSelectDevice={setSelectedDevice} onStartAudio={startAudio} />
         <ActiveAudioDevicesList
           activeAudioDevices={activeAudioDevices}
-          playbackStatus={playbackStatus}
+          playbackStatus={devicePlaybackStatuses}
           onPause={userPausedAudio}
           onResume={resumeAudio}
           onStop={stopAudio}
