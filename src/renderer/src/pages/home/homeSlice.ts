@@ -33,7 +33,7 @@ export const homeSlice = createSlice({
       console.log(action.payload);
 
       state.audioManager.activeAudioDevices = state.audioManager.activeAudioDevices.filter(
-        (device) => device.htmlAudioElement !== action.payload.htmlAudioElement,
+        (device) => device.mediaDeviceInfo.deviceId !== action.payload.mediaDeviceInfo.deviceId,
       );
       const { [action.payload.mediaDeviceInfo.deviceId]: _, ...newPlaybackStatus } = state.audioManager.playbackStatus;
       state.audioManager.playbackStatus = newPlaybackStatus;

@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react';
+import { ReactElement, useRef, useState } from 'react';
 import audioString from './assets/error.mp3';
 import AudioDeviceSelector from './components/AudioDeviceSelector';
 import ActiveAudioDevicesList from './components/ActiveAudioDevicesList';
@@ -8,25 +8,38 @@ import { useNavigate } from '@tanstack/react-router';
 import useIpcListener from './hooks';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './store';
-import { addActiveAudioDevice, removeActiveAudioDevice, setSelectedDevice, updatePlaybackStatus } from './pages/home/homeSlice';
+import {
+  addActiveAudioDevice,
+  removeActiveAudioDevice,
+  setSelectedDevice,
+  updatePlaybackStatus,
+} from './pages/home/homeSlice';
+import { useAudioRefs } from './components/AudioContext';
+
+const audioRefsSingleton: { [key: string]: { current: HTMLAudioElement | null } } = {};
 
 function App(): ReactElement {
   const navigate = useNavigate({ from: '/posts/$postId' });
 
   const dispatch = useDispatch();
-  const selectedDevice = useSelector((state: RootState) => state.home.audioManager.selectedDevice);
+  const [selectedDevice, setSelectedDevice] = useState<MediaDeviceInfo | null>(null);
+
+  //const selectedDevice = useSelector((state: RootState) => state.home.audioManager.selectedDevice);
   const activeAudioDevices = useSelector(
     (state: RootState) => state.home.audioManager.activeAudioDevices,
   );
   const playbackStatus = useSelector((state: RootState) => state.home.audioManager.playbackStatus);
 
+  const audioRefs = useAudioRefs();
+  //const audioRefs = useRef<{ [key: string]: React.RefObject<HTMLAudioElement> }>({});
+
   // const [selectedDevice, setSelectedDevice] = useState<MediaDeviceInfo | null>(null);
   // const [activeAudioDevices, setActiveAudioDevices] = useState<ActiveAudioDevice[]>([]);
   // const [playbackStatus, setPlaybackStatus] = useState<Record<string, boolean>>({});
 
-  const handleDeviceChange = (device: MediaDeviceInfo | null) => {
-    dispatch(setSelectedDevice(device));
-  };
+  // const handleDeviceChange = (device: MediaDeviceInfo | null) => {
+  //   dispatch(setSelectedDevice(device));
+  // };
 
   const startAudio = async () => {
     if (selectedDevice) {
@@ -34,13 +47,22 @@ function App(): ReactElement {
       audio.loop = true;
       await audio.setSinkId(selectedDevice.deviceId);
       audio.play();
+
+      audioRefs[selectedDevice.deviceId] = { current: audio };
+
       const newActiveAudio: ActiveAudioDevice = {
-        htmlAudioElement: audio,
-        mediaDeviceInfo: selectedDevice,
+        // htmlAudioElement: audio,
+        mediaDeviceInfo: {
+          deviceId: selectedDevice.deviceId,
+          groupId: selectedDevice.groupId,
+          kind: selectedDevice.kind,
+          label: selectedDevice.label,
+        },
+        //htmlAudioElement: audioRefs.current[selectedDevice.deviceId]
       };
       // setActiveAudioDevices([...activeAudioDevices, newActiveAudio]);
 
-      dispatch(addActiveAudioDevice(newActiveAudio))
+      dispatch(addActiveAudioDevice(newActiveAudio));
       dispatch(
         updatePlaybackStatus({
           deviceId: newActiveAudio.mediaDeviceInfo.deviceId,
@@ -55,8 +77,9 @@ function App(): ReactElement {
   };
 
   const stopAudio = (activeAudioDevice: ActiveAudioDevice) => {
-    activeAudioDevice.htmlAudioElement.pause();
-    activeAudioDevice.htmlAudioElement.remove();
+    const audioElement = audioRefs[activeAudioDevice.mediaDeviceInfo.deviceId]?.current;
+    audioElement!.pause();
+    audioElement!.remove();
 
     dispatch(removeActiveAudioDevice(activeAudioDevice));
     // dispatch(
@@ -76,8 +99,11 @@ function App(): ReactElement {
   };
 
   const pauseAudio = (activeAudioDevice: ActiveAudioDevice) => {
-    activeAudioDevice.htmlAudioElement.pause();
-    activeAudioDevice.htmlAudioElement.currentTime = 0;
+    console.log(audioRefs);
+
+    const audioElement = audioRefs[activeAudioDevice.mediaDeviceInfo.deviceId]?.current;
+    audioElement!.pause();
+    audioElement!.currentTime = 0;
 
     dispatch(
       updatePlaybackStatus({
@@ -92,7 +118,8 @@ function App(): ReactElement {
   };
 
   const resumeAudio = (activeAudioDevice: ActiveAudioDevice) => {
-    activeAudioDevice.htmlAudioElement.play();
+    const audioElement = audioRefs[activeAudioDevice.mediaDeviceInfo.deviceId]?.current;
+    audioElement!.play();
 
     dispatch(
       updatePlaybackStatus({
@@ -136,7 +163,7 @@ function App(): ReactElement {
             Keep Audio Alive
           </Text>
         </Box> */}
-        <AudioDeviceSelector onSelectDevice={handleDeviceChange} onStartAudio={startAudio} />
+        <AudioDeviceSelector onSelectDevice={setSelectedDevice} onStartAudio={startAudio} />
         <ActiveAudioDevicesList
           activeAudioDevices={activeAudioDevices}
           playbackStatus={playbackStatus}

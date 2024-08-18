@@ -1,4 +1,13 @@
 export interface ActiveAudioDevice {
-  mediaDeviceInfo: MediaDeviceInfo;
-  htmlAudioElement: HTMLAudioElement;
+  mediaDeviceInfo: MediaDeviceInfoCustom;
+
+  // htmlAudioElement: HTMLAudioElement;
+  //htmlAudioElement: React.RefObject<HTMLAudioElement>;
+}
+
+export interface MediaDeviceInfoCustom {
+  readonly deviceId: string;
+  readonly groupId: string;
+  readonly kind: MediaDeviceKind;
+  readonly label: string;
 }

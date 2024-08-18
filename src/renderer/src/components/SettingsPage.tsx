@@ -30,12 +30,12 @@ const Settings: React.FunctionComponent<Props> = (props: Props): ReactElement =>
   return (
     <div className="settings-container">
       <div className="settings-content">
-        <Text as="div" size="6" weight="regular" align="center">
+        <Text as="div" size="6" weight="regular" align="center" style={{margin: "1rem"}} >
           Settings
         </Text>
         <Flex direction="column" gap="1rem" width={'500px'}>
           <Box>
-            <Text as="div" size="4" weight="regular">
+            <Text as="div" size="2" weight="regular">
               Idle Detection
             </Text>
             <Switch
@@ -47,8 +47,8 @@ const Settings: React.FunctionComponent<Props> = (props: Props): ReactElement =>
 
           {isToggled && (
             <Box>
-              <Text as="div" size="4" weight="regular">
-                Idle Detection Time (minutes)
+              <Text as="div" size="2" weight="regular">
+                Idle Detection Time
               </Text>
               <Select.Root
                 defaultValue={idleDetectionTime.toString()}

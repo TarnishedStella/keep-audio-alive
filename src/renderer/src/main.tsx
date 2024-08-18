@@ -11,7 +11,7 @@ import { Route } from './routes/__root';
 import { settingsRoute } from './routes/settings.lazy';
 import { Provider } from 'react-redux';
 import store from './store';
-
+import { AudioProvider } from './components/AudioContext';
 
 const indexRoute = createRoute({
   getParentRoute: () => Route,
@@ -29,9 +29,11 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Theme appearance="dark" accentColor="violet">
       <Provider store={store}>
-        <QueryClientProvider client={queryClient}>
-          <RouterProvider router={router} />
-        </QueryClientProvider>
+        <AudioProvider>
+          <QueryClientProvider client={queryClient}>
+            <RouterProvider router={router} />
+          </QueryClientProvider>
+        </AudioProvider>
       </Provider>
     </Theme>
   </React.StrictMode>,
