@@ -7,6 +7,10 @@ const api = {
   getAppVersion: () => ipcRenderer.invoke('get-app-version'),
   getSettings: () => ipcRenderer.invoke('load-settings'),
   saveSettings: (settingsData: ApplicationSettings) => ipcRenderer.invoke('save-settings', settingsData),
+  on: (channel: string, listener: (...args: any[]) => void) => {
+    ipcRenderer.on(channel, listener);
+    return () => ipcRenderer.removeListener(channel, listener);
+  },
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to
