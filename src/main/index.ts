@@ -1,10 +1,9 @@
-import { app, shell, BrowserWindow, ipcMain, Tray, Menu } from 'electron';
+import { app, shell, BrowserWindow, ipcMain, Tray, Menu, powerMonitor } from 'electron';
 import { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import icon from '../../resources/icon.png?asset';
 
-import audio from '../../resources/nothing.mp3?asset';
-
+import audio from '../../resources/error.mp3?asset';
 
 let mainWindow: BrowserWindow | null = null;
 let tray: Tray | null = null;
@@ -21,6 +20,7 @@ function createWindow(): void {
     minWidth: 650,
     show: false,
     autoHideMenuBar: true,
+    title: "Keep Audio Alive",
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
@@ -150,6 +150,8 @@ app.whenReady().then(async () => {
   tray!.on('double-click', () => {
     showMainWindow();
   });
+
+  startMonitoring();
 });
 
 app.on('window-all-closed', (event) => {
@@ -168,6 +170,49 @@ ipcMain.on('audio-status', (event, status) => {
 ipcMain.handle('get-app-version', async () => {
   return app.getVersion();
 });
+
+const INACTIVITY_THRESHOLD = 60; // 1 minute
+const CHECK_INTERVAL = 10000; // 10 seconds
+
+async function monitorInactivity() {
+  while (true) {
+    await new Promise((resolve) => setTimeout(resolve, CHECK_INTERVAL));
+
+    const isIdle = checkUserInactivity();
+
+    if (isIdle) {
+      console.log("user is idle!");
+      // Send a message to the renderer process if the user is inactive
+      // mainWindow.webContents.send('user-inactive');
+    }
+  }
+}
+
+function checkUserInactivity(): boolean {
+  const idleTime = powerMonitor.getSystemIdleTime();
+  console.log(idleTime);
+  if (idleTime > INACTIVITY_THRESHOLD) {
+    return true;
+  }
+  return false;
+}
+
+function startMonitoring() {
+  monitorInactivity().catch(console.error);
+}
+
+// async function checkUserInactivity(): Promise<boolean> {
+//   return new Promise((resolve) => {
+//     const idleTime = powerMonitor.getSystemIdleTime();
+//     if (idleTime > INACTIVITY_THRESHOLD){
+//       return true;
+//     }
+//     idle.start(INACTIVITY_THRESHOLD, (isIdle) => {
+//       idle.stop(); // Stop the idle monitoring after the check
+//       resolve(isIdle);
+//     });
+//   });
+// }
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.

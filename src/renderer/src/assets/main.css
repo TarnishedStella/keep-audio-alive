@@ -247,3 +247,18 @@ code {
   gap: 0.25rem;
   max-width: 75vw;
 } */
+
+
+.settings-container{
+  width: 100vw;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.settings-content {
+  max-width: 800px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}

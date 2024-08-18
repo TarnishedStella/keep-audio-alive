@@ -4,8 +4,10 @@ import AudioDeviceSelector from './components/AudioDeviceSelector';
 import ActiveAudioDevicesList from './components/ActiveAudioDevicesList';
 import Version from './components/Version';
 import { ActiveAudioDevice } from './Types';
+import { useNavigate } from '@tanstack/react-router';
 
 function App(): ReactElement {
+  const navigate = useNavigate({ from: '/posts/$postId' });
   const [selectedDevice, setSelectedDevice] = useState<MediaDeviceInfo | null>(null);
   const [activeAudioDevices, setActiveAudioDevices] = useState<ActiveAudioDevice[]>([]);
   const [playbackStatus, setPlaybackStatus] = useState<Record<string, boolean>>({});
@@ -74,6 +76,7 @@ function App(): ReactElement {
           onStop={stopAudio}
         />
       </div>
+      <button onClick={() => navigate({ to: '/settings' })}>test</button>
       <Version></Version>
     </div>
   );
