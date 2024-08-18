@@ -43,14 +43,6 @@ function App(): ReactElement {
     setAudioDevices(filteredDevices);
   };
 
-  const handleDeviceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedDeviceId = event.target.value;
-    const device = audioDevices.find((device) => device.deviceId === selectedDeviceId);
-    console.log(selectedDeviceId);
-    console.log(device);
-    setSelectedDevice(device || null);
-  };
-
   const handleDeviceChange2 = (selectedDeviceId: string) => {
     const device = audioDevices.find((device) => device.deviceId === selectedDeviceId);
     console.log(selectedDeviceId);
@@ -108,14 +100,14 @@ function App(): ReactElement {
     }));
   };
 
-  function filterAudioDeviceLabel(label: string){
+  function filterAudioDeviceLabel(label: string) {
     return label.replace(/\s*\([a-fA-F0-9]+:[a-fA-F0-9]+\)$/, '');
   }
+
 
   return (
     <div className="main-container">
       <div className="component-container">
-        {/* <Flex direction="column" gap="1rem" align={'center'} minWidth={"500px"}> */}
         <Box p={'1rem'}>
           <Text as="div" size="6" weight="regular" align="center">
             Keep Audio Alive
@@ -125,7 +117,11 @@ function App(): ReactElement {
         <div className="selector-container">
           <div className="selection-box">
             <Select.Root size={'2'} onValueChange={handleDeviceChange2}>
-              <Select.Trigger radius="large" placeholder="Select an Audio Device" className='selection-box-trigger' />
+              <Select.Trigger
+                radius="large"
+                placeholder="Select an Audio Device"
+                className="selection-box-trigger"
+              />
               <Select.Content className="SelectContent" position="popper" sideOffset={5}>
                 {audioDevices.map((device) => (
                   <Select.Item key={device.deviceId} value={device.deviceId}>
@@ -137,43 +133,15 @@ function App(): ReactElement {
           </div>
 
           <div className="selection-buttons">
-            {/* <Flex gap={'2'}> */}
             <IconButton onClick={listDevices} variant="soft" size="2" color="gray">
               <ReloadIcon width="18" height="18" />
             </IconButton>
             <IconButton onClick={startAudio} variant="soft" size="2" color="green">
               <PlusIcon width="18" height="18" />
             </IconButton>
-            {/* </Flex> */}
           </div>
         </div>
 
-        {/* <Grid gap={'0.5rem'} columns="80% 20%" width="50vw">
-          {audioDevices.length > 0 && (
-            <Flex direction="column">
-              <Select.Root size={'2'} onValueChange={handleDeviceChange2}>
-                <Select.Trigger radius="large" placeholder="Select an Audio Device" />
-                <Select.Content position="popper">
-                  {audioDevices.map((device) => (
-                    <Select.Item key={device.deviceId} value={device.deviceId}>
-                      {device.label}
-                    </Select.Item>
-                  ))}
-                </Select.Content>
-              </Select.Root>
-            </Flex>
-          )}
-          <Flex gap={'2'}>
-            <IconButton onClick={listDevices} variant="soft" size="2" color="gray">
-              <ReloadIcon width="18" height="18" />
-            </IconButton>
-            <IconButton onClick={startAudio} variant="soft" size="2" color="green">
-              <PlusIcon width="18" height="18" />
-            </IconButton>
-          </Flex>
-        </Grid> */}
-
-        {/* <Card variant="surface" size={'1'}> */}
         <div
           style={{
             width: '100%',
@@ -232,148 +200,13 @@ function App(): ReactElement {
                           )}
                         </div>
                       </div>
-
-                      {/* <Grid p={'1'} columns="85% 15%"> */}
-                      {/* <Text>{device?.mediaDeviceInfo.label || 'Unknown Device'}</Text> */}
-
-                      {/* <Grid columns="2" align={'center'}>
-                        <IconButton
-                          onClick={() => stopAudio(device)}
-                          variant="soft"
-                          size="2"
-                          color="red"
-                        >
-                          <StopIcon width="18" height="18" />
-                        </IconButton>
-
-                        {playbackStatus[device.mediaDeviceInfo.deviceId] ? (
-                          <IconButton
-                            onClick={() => resumeAudio(device)}
-                            variant="soft"
-                            size="2"
-                            color="green"
-                          >
-                            <ResumeIcon width="18" height="18" />
-                          </IconButton>
-                        ) : (
-                          <IconButton
-                            onClick={() => pauseAudio(device)}
-                            variant="soft"
-                            size="2"
-                            color="red"
-                          >
-                            <PauseIcon width="18" height="18" />
-                          </IconButton>
-                        )}
-                      </Grid> */}
-                      {/* </Grid> */}
                     </Card>
                   ))}
                 </Flex>
               </>
             )}
-            {/* <Table.Root style={{ width: '100%', maxWidth: '100%' }}>
-              <Table.Body style={{ width: '100%', maxWidth: '100%' }}>
-                {activeAudioDevices.map((device) => (
-                  <Table.Row key={device.mediaDeviceInfo.deviceId} align={'center'}>
-                    <Table.Cell style={{ width: '80%' }}>
-                      {device?.mediaDeviceInfo.label || 'Unknown Device'}
-                    </Table.Cell>
-                    <Table.Cell style={{ width: '20%' }} align="right" justify={'end'}>
-                      <Grid columns="2" justify={'end'}>
-                        <IconButton
-                          onClick={() => stopAudio(device)}
-                          variant="soft"
-                          size="2"
-                          color="red"
-                        >
-                          <StopIcon width="18" height="18" />
-                        </IconButton>
-
-                        {playbackStatus[device.mediaDeviceInfo.deviceId] ? (
-                          <IconButton
-                            onClick={() => resumeAudio(device)}
-                            variant="soft"
-                            size="2"
-                            color="green"
-                          >
-                            <ResumeIcon width="18" height="18" />
-                          </IconButton>
-                        ) : (
-                          <IconButton
-                            onClick={() => pauseAudio(device)}
-                            variant="soft"
-                            size="2"
-                            color="red"
-                          >
-                            <PauseIcon width="18" height="18" />
-                          </IconButton>
-                        )}
-                      </Grid>
-                    </Table.Cell>
-                  </Table.Row>
-                ))}
-              </Table.Body>
-            </Table.Root> */}
-
-            {/* {activeAudioDevices.map((device) => (
-              <Grid columns="1" gap="3" width="auto">
-                <Flex key={device.mediaDeviceInfo.deviceId} gap={'0.5rem'}>
-                  <Text>{device?.mediaDeviceInfo.label || 'Unknown Device'}</Text>
-
-                  <Flex gap={'0.5rem'}>
-                    <IconButton
-                      onClick={() => stopAudio(device)}
-                      variant="soft"
-                      size="2"
-                      color="red"
-                    >
-                      <StopIcon width="18" height="18" />
-                    </IconButton>
-
-                    {playbackStatus[device.mediaDeviceInfo.deviceId] ? (
-                      <IconButton
-                        onClick={() => resumeAudio(device)}
-                        variant="soft"
-                        size="2"
-                        color="green"
-                      >
-                        <ResumeIcon width="18" height="18" />
-                      </IconButton>
-                    ) : (
-                      <IconButton
-                        onClick={() => pauseAudio(device)}
-                        variant="soft"
-                        size="2"
-                        color="red"
-                      >
-                        <PauseIcon width="18" height="18" />
-                      </IconButton>
-                    )}
-                  </Flex>
-                </Flex>
-              </Grid>
-            ))} */}
           </Flex>
         </div>
-        {/* </Card> */}
-        {/* <div>
-          <h2>Currently Active Devices</h2>
-          <div>
-            {activeAudioDevices.map((device) => (
-              <div key={device.mediaDeviceInfo.deviceId}>
-                <div></div>
-                <ul>
-                  <li>{device?.mediaDeviceInfo.label || 'Unknown Device'}</li>
-                </ul>
-                <button onClick={() => stopAudio(device)}>Stop Audio</button>
-                <button onClick={() => pauseAudio(device)}>Pause</button>
-                <button onClick={() => resumeAudio(device)}>Resume</button>
-              </div>
-            ))}
-          </div>
-        </div> */}
-        {/* </Flex> */}
       </div>
     </div>
   );
