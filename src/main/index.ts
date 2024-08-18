@@ -3,15 +3,25 @@ import { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import icon from '../../resources/icon.png?asset';
 
-import audio from '../../resources/error.mp3?asset';
+import { ApplicationSettings } from './types';
+
+const fs = require('fs');
+const path = require('path');
+
+const settingsPath = path.join(app.getPath('userData'), 'settings.json');
+
+// import audio from '../../resources/error.mp3?asset';
 
 let mainWindow: BrowserWindow | null = null;
 let tray: Tray | null = null;
 let audioWindow: BrowserWindow | null = null;
 let isQuitting: boolean;
 let isPlaying = false;
+const settings = loadSettings();
 
 function createWindow(): void {
+  loadSettings();
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 900,
@@ -20,7 +30,7 @@ function createWindow(): void {
     minWidth: 650,
     show: false,
     autoHideMenuBar: true,
-    title: "Keep Audio Alive",
+    title: 'Keep Audio Alive',
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
@@ -126,7 +136,7 @@ app.whenReady().then(async () => {
   createTray();
   createAudioWindow();
 
-  console.log(audio);
+  // console.log(audio);
 
   mainWindow?.on('minimize', (event) => {
     event.preventDefault();
@@ -171,6 +181,45 @@ ipcMain.handle('get-app-version', async () => {
   return app.getVersion();
 });
 
+function loadSettings(): any {
+  try {
+    if (fs.existsSync(settingsPath)) {
+      const data = fs.readFileSync(settingsPath, 'utf-8');
+      return JSON.parse(data);
+    } else {
+      // create default settings
+      console.log('creating default settings');
+      const defaultSettings: ApplicationSettings = {
+        inactivityToggle: true,
+        inactivityTimer: 15,
+      };
+      saveSettings(defaultSettings);
+      return defaultSettings;
+    }
+  } catch (error) {
+    console.error('Failed to load settings:', error);
+  }
+  return null;
+}
+
+ipcMain.handle('load-settings', () => {
+  return loadSettings();
+});
+
+ipcMain.handle('save-settings', (event, settingsData) => {
+  saveSettings(settingsData);
+});
+
+// Function to write settings to the file
+function saveSettings(settings: ApplicationSettings): void {
+  try {
+    console.log(JSON.stringify(settings, null, 2));
+    fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
+  } catch (error) {
+    console.error('Failed to save settings:', error);
+  }
+}
+
 const INACTIVITY_THRESHOLD = 60; // 1 minute
 const CHECK_INTERVAL = 10000; // 10 seconds
 
@@ -181,7 +230,7 @@ async function monitorInactivity() {
     const isIdle = checkUserInactivity();
 
     if (isIdle) {
-      console.log("user is idle!");
+      console.log('user is idle!');
       // Send a message to the renderer process if the user is inactive
       // mainWindow.webContents.send('user-inactive');
     }

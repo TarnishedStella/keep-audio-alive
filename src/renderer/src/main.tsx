@@ -9,6 +9,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createRoute, createRouter, RouterProvider } from '@tanstack/react-router';
 import { Route } from './routes/__root';
 import { settingsRoute } from './routes/settings.lazy';
+import { Provider } from 'react-redux';
+import store from './store';
+
 
 const indexRoute = createRoute({
   getParentRoute: () => Route,
@@ -25,9 +28,11 @@ const router = createRouter({ routeTree });
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Theme appearance="dark" accentColor="violet">
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>
+      <Provider store={store}>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </Provider>
     </Theme>
   </React.StrictMode>,
 );
