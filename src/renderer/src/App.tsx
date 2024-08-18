@@ -15,6 +15,11 @@ import {
   updatePlaybackStatus,
 } from './pages/home/homeSlice';
 import { useAudioRefs } from './components/AudioContext';
+import {
+  selectActiveAudioDevices,
+  selectDevicePlaybackStatuses,
+} from './pages/home/selectors';
+import { selectIsInactivityToggled } from './pages/settings/selectors';
 
 function App(): ReactElement {
   const navigate = useNavigate({ from: '/posts/$postId' });
@@ -22,14 +27,9 @@ function App(): ReactElement {
   const dispatch = useDispatch();
   const [selectedDevice, setSelectedDevice] = useState<MediaDeviceInfo | null>(null);
 
-  const activeAudioDevices = useSelector(
-    (state: RootState) => state.home.audioManager.activeAudioDevices,
-  );
-  const devicePlaybackStatuses = useSelector(
-    (state: RootState) => state.home.audioManager.devicePlaybackStatuses,
-  );
-
-  const isInactivityToggled = useSelector((state: RootState) => state.settings.inactivityToggle);
+  const activeAudioDevices = useSelector(selectActiveAudioDevices);
+  const devicePlaybackStatuses = useSelector(selectDevicePlaybackStatuses);
+  const isInactivityToggled = useSelector(selectIsInactivityToggled);
 
   const audioRefs = useAudioRefs();
 

@@ -1,8 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ActiveAudioDevice } from '../../Types';
 
-// import {ApplicationSettings} from '../../../../main/types';
-
 export const HOME_SLICE_NAME = 'home';
 
 export enum PlaybackState {
@@ -13,7 +11,7 @@ export enum PlaybackState {
 
 export interface IPlaybackStatus {
   deviceId: string;
-  playbackState: PlaybackState
+  playbackState: PlaybackState;
 }
 
 interface AudioManager {
@@ -48,8 +46,6 @@ export const homeSlice = createSlice({
       );
 
       delete state.audioManager.devicePlaybackStatuses[action.payload.mediaDeviceInfo.deviceId];
-      // const { [action.payload.mediaDeviceInfo.deviceId]: _, ...newPlaybackStatus } = state.audioManager.playbackStatus;
-      // state.audioManager.playbackStatus = newPlaybackStatus;
     },
     updatePlaybackStatus: (state, action: PayloadAction<IPlaybackStatus>) => {
       state.audioManager.devicePlaybackStatuses[action.payload.deviceId] = action.payload;

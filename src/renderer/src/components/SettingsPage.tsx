@@ -1,12 +1,13 @@
 import { ReactElement } from 'react';
-import React, { useState } from 'react';
+import React from 'react';
 import { Switch, Select, Text } from '@radix-ui/themes';
-import { Box, Flex, IconButton } from '@radix-ui/themes';
-import {
-  setInactivityTimer,
-  setInactivityToggle,
-} from '@renderer/pages/settings/settingsSlice';
+import { Box, Flex } from '@radix-ui/themes';
+import { setInactivityTimer, setInactivityToggle } from '@renderer/pages/settings/settingsSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
+import {
+  selectInactivityTimer,
+  selectIsInactivityToggled,
+} from '@renderer/pages/settings/selectors';
 
 const idleTimes = [5, 10, 15, 30, 60]; // Idle detection times in minutes
 
@@ -15,8 +16,8 @@ interface Props {
 }
 
 const Settings: React.FunctionComponent<Props> = (props: Props): ReactElement => {
-  const isToggled = useAppSelector((state) => state.settings.inactivityToggle);
-  const idleDetectionTime = useAppSelector((state) => state.settings.inactivityTimer);
+  const isToggled = useAppSelector(selectIsInactivityToggled);
+  const idleDetectionTime = useAppSelector(selectInactivityTimer);
   const dispatch = useAppDispatch();
 
   function handleToggleChange() {
@@ -30,7 +31,7 @@ const Settings: React.FunctionComponent<Props> = (props: Props): ReactElement =>
   return (
     <div className="settings-container">
       <div className="settings-content">
-        <Text as="div" size="6" weight="regular" align="center" style={{margin: "1rem"}} >
+        <Text as="div" size="6" weight="regular" align="center" style={{ margin: '1rem' }}>
           Settings
         </Text>
         <Flex direction="column" gap="1rem" width={'500px'}>
