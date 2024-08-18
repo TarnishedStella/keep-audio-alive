@@ -61,7 +61,6 @@ const AudioDeviceSelector: React.FC<AudioDeviceSelectorProps> = ({
 };
 
 async function listAudioDevices(): Promise<MediaDeviceInfo[]> {
-  console.log('hey');
   const devices = await navigator.mediaDevices.enumerateDevices();
   return devices.filter((device) => device.kind === 'audiooutput');
 }

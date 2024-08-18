@@ -5,10 +5,16 @@ import { ActiveAudioDevice } from '../../Types';
 
 export const HOME_SLICE_NAME = 'home';
 
+export interface IPlaybackStatus{
+  deviceId: string;
+  isPaused: boolean;
+  userPaused: boolean;
+}
+
 interface AudioManager {
   selectedDevice: MediaDeviceInfo | null;
   activeAudioDevices: ActiveAudioDevice[];
-  playbackStatus: Record<string, boolean>;
+  playbackStatus: Record<string, IPlaybackStatus>;
 }
 
 export interface IHomeSlice {
@@ -35,14 +41,16 @@ export const homeSlice = createSlice({
       state.audioManager.activeAudioDevices = state.audioManager.activeAudioDevices.filter(
         (device) => device.mediaDeviceInfo.deviceId !== action.payload.mediaDeviceInfo.deviceId,
       );
-      const { [action.payload.mediaDeviceInfo.deviceId]: _, ...newPlaybackStatus } = state.audioManager.playbackStatus;
-      state.audioManager.playbackStatus = newPlaybackStatus;
+
+      delete state.audioManager.playbackStatus[action.payload.mediaDeviceInfo.deviceId];
+      // const { [action.payload.mediaDeviceInfo.deviceId]: _, ...newPlaybackStatus } = state.audioManager.playbackStatus;
+      // state.audioManager.playbackStatus = newPlaybackStatus;
     },
     updatePlaybackStatus: (
       state,
-      action: PayloadAction<{ deviceId: string; isPaused: boolean }>,
+      action: PayloadAction<IPlaybackStatus>,
     ) => {
-      state.audioManager.playbackStatus[action.payload.deviceId] = action.payload.isPaused;
+      state.audioManager.playbackStatus[action.payload.deviceId] = action.payload;
     },
   },
 });
