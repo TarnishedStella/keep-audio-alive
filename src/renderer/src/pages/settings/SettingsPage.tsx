@@ -31,21 +31,15 @@ const Settings: React.FunctionComponent = (): ReactElement => {
   }
 
   return (
-    <div className="settings-container">
-      <div className="settings-content">
+    <div className="main-container">
+      <div className="component-container">
         <div className="settings-title">
           <div className="settings-back-button-container">
-            <IconButton size="2" onClick={() => navigate({ to: '/' })}>
+            <IconButton variant="soft" size="2" color="gray" onClick={() => navigate({ to: '/' })}>
               <ArrowLeftIcon width="18" height="18"></ArrowLeftIcon>
             </IconButton>
           </div>
-          <Text
-            as="div"
-            size="5"
-            weight="bold"
-            align="center"
-            style={{ margin: '1rem', flex: '1 1 auto' }}
-          >
+          <Text as="div" size="5" weight="bold" align="center" style={{ flex: '1 1 auto' }}>
             Settings
           </Text>
           <div className="settings-back-button-counterweight"></div>

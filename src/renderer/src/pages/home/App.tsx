@@ -16,7 +16,7 @@ import {
 import { useAudioRefs } from '../../components/AudioContext';
 import { selectActiveAudioDevices, selectDevicePlaybackStatuses } from './selectors';
 import { selectIsInactivityToggled } from '../settings/selectors';
-import { Flex, IconButton } from '@radix-ui/themes';
+import { Flex, IconButton, Text } from '@radix-ui/themes';
 import { GearIcon } from '@radix-ui/react-icons';
 
 function App(): ReactElement {
@@ -149,11 +149,22 @@ function App(): ReactElement {
   return (
     <div className="main-container">
       <div className="component-container">
-        {/* <Box p={'1rem'}>
-          <Text as="div" size="6" weight="regular" align="center">
-            Keep Audio Alive
+        <div className="settings-title">
+          <div className="flex-1"></div>
+          <Text as="div" size="5" weight="bold" align="center" style={{ flex: '1 1 auto' }}>
+            Home
           </Text>
-        </Box> */}
+          <div className="home-page-settings-button-container">
+            <IconButton
+              onClick={() => navigate({ to: '/settings' })}
+              variant="soft"
+              size="2"
+              color="gray"
+            >
+              <GearIcon width="18" height="18" />
+            </IconButton>
+          </div>
+        </div>
 
         <AudioDeviceSelector onSelectDevice={setSelectedDevice} onStartAudio={startAudio} />
         <ActiveAudioDevicesList
@@ -164,19 +175,19 @@ function App(): ReactElement {
           onStop={stopAudio}
         />
       </div>
-      <Flex justify={'end'} mb={'3'}>
+      <Flex className='version-container2' justify={'center'}>
         {/* <Text as="div" size="6" weight="regular" align="center" style={{ paddingRight: '1rem' }}>
           Home
         </Text> */}
         <Version></Version>
-        <IconButton
+        {/* <IconButton
           onClick={() => navigate({ to: '/settings' })}
           variant="soft"
           size="2"
           color="gray"
         >
           <GearIcon width="18" height="18" />
-        </IconButton>
+        </IconButton> */}
       </Flex>
     </div>
   );

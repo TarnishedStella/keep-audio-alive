@@ -129,7 +129,7 @@ code {
   justify-content: center;
   align-items: center;
   display: flex;
-  padding: 0 0.5rem;
+  padding: 0 0rem;
 }
 
 .custom-version {
@@ -258,6 +258,13 @@ code {
   flex-grow: 1;
 }
 
+.version-container2 {
+  width: 100%;
+  width: 800px;
+  max-width: 80vw;
+  padding: 0rem 2rem;
+}
+
 /*
 .audio-selection {
   display: flex;
@@ -265,12 +272,12 @@ code {
   max-width: 75vw;
 } */
 
-.settings-container {
+/* .settings-container {
   width: 100vw;
-  padding: 1rem;
+  padding: 2rem;
   display: flex;
   justify-content: center;
-}
+} */
 
 .settings-content {
   width: 800px;
@@ -279,12 +286,13 @@ code {
   display: flex;
   justify-content: center;
   flex-direction: column;
+  gap: 0.5rem;
 }
 
 .settings-title {
   display: flex;
   justify-content: center;
-  padding-bottom: 0rem;
+  padding-bottom: 1rem;
 }
 
 .settings-back-button-container {
@@ -298,6 +306,13 @@ code {
   flex: 1;
 }
 
-.settings-card {
+.flex-1 {
+  flex: 1;
+}
 
+.home-page-settings-button-container {
+  flex: 1;
+  display: flex;
+  justify-content: end;
+  align-items: center;
 }
