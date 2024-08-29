@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ipcRenderer } from 'electron';
 
 // import {ApplicationSettings} from '../../../../main/types';
 

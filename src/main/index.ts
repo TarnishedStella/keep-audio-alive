@@ -10,11 +10,8 @@ const path = require('path');
 
 const settingsPath = path.join(app.getPath('userData'), 'settings.json');
 
-// import audio from '../../resources/error.mp3?asset';
-
 let mainWindow: BrowserWindow | null = null;
 let tray: Tray | null = null;
-let audioWindow: BrowserWindow | null = null;
 let isQuitting: boolean;
 let isPlaying = false;
 const settings = loadSettings();
@@ -59,18 +56,6 @@ function createWindow(): void {
     mainWindow = null;
   });
 }
-
-const createAudioWindow = () => {
-  audioWindow = new BrowserWindow({
-    show: false,
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
-    },
-  });
-
-  audioWindow.loadFile('./resources/hidden-audio.html');
-};
 
 const createTray = () => {
   tray = new Tray(icon); // Replace with the path to your tray icon
@@ -131,7 +116,6 @@ app.whenReady().then(async () => {
 
   createWindow();
   createTray();
-  createAudioWindow();
 
   mainWindow?.on('minimize', (event) => {
     event.preventDefault();
@@ -168,18 +152,12 @@ app.on('before-quit', () => {
 });
 
 ipcMain.handle('playing-audio', (event) => {
-  isPlaying = true
+  isPlaying = true;
   UpdateTrayContextMenu();
 });
 
 ipcMain.handle('not-playing-audio', (event) => {
-  isPlaying = false
-  UpdateTrayContextMenu();
-});
-
-
-ipcMain.on('audio-status', (event, status) => {
-  isPlaying = status === 'playing';
+  isPlaying = false;
   UpdateTrayContextMenu();
 });
 
@@ -261,7 +239,6 @@ function checkUserInactivity(): boolean {
 function startMonitoring() {
   monitorInactivity().catch(console.error);
 }
-
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
