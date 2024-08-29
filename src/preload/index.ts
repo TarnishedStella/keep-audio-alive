@@ -1,17 +1,18 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import { electronAPI } from '@electron-toolkit/preload';
-import { ApplicationSettings } from '../main/types';
+import { ApplicationSettings } from '../types';
 
 // Custom APIs for renderer
 const api = {
-  getAppVersion: () => ipcRenderer.invoke('get-app-version'),
-  getSettings: () => ipcRenderer.invoke('load-settings'),
-  saveSettings: (settingsData: ApplicationSettings) => ipcRenderer.invoke('save-settings', settingsData),
-  playingAudio: () => ipcRenderer.invoke('playing-audio'),
-  notPlayingAudio: () => ipcRenderer.invoke('not-playing-audio'),
-  on: (channel: string, listener: (...args: any[]) => void) => {
+  getAppVersion: (): Promise<string> => ipcRenderer.invoke('get-app-version'),
+  getSettings: (): Promise<ApplicationSettings> => ipcRenderer.invoke('load-settings'),
+  saveSettings: (settingsData: ApplicationSettings): Promise<void> =>
+    ipcRenderer.invoke('save-settings', settingsData),
+  playingAudio: (): Promise<void> => ipcRenderer.invoke('playing-audio'),
+  notPlayingAudio: (): Promise<void> => ipcRenderer.invoke('not-playing-audio'),
+  on: (channel: string, listener: (...args: unknown[]) => void) => {
     ipcRenderer.on(channel, listener);
-    return () => ipcRenderer.removeListener(channel, listener);
+    return (): Electron.IpcRenderer => ipcRenderer.removeListener(channel, listener);
   },
 };
 

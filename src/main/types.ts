@@ -1,4 +1,4 @@
-export interface ApplicationSettings {
-  inactivityToggle: boolean;
-  inactivityTimer: number;
-}
+// export interface ApplicationSettings {
+//   inactivityToggle: boolean;
+//   inactivityTimer: number;
+// }
