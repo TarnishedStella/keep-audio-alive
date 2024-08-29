@@ -19,13 +19,13 @@ const AudioDeviceSelector: React.FC<AudioDeviceSelectorProps> = ({
     queryFn: listAudioDevices,
   });
 
-  const handleDeviceChange = (selectedDeviceId: string) => {
+  const handleDeviceChange = (selectedDeviceId: string): void => {
     const selectedDevice =
       audioDevices.find((device) => device.deviceId === selectedDeviceId) || null;
     onSelectDevice(selectedDevice);
   };
 
-  function refreshMediaList() {
+  function refreshMediaList(): void {
     queryClient.invalidateQueries({ queryKey: ['audioDevices'] });
   }
 
@@ -65,7 +65,7 @@ async function listAudioDevices(): Promise<MediaDeviceInfo[]> {
   return devices.filter((device) => device.kind === 'audiooutput');
 }
 
-function filterAudioDeviceLabel(label: string) {
+function filterAudioDeviceLabel(label: string): string {
   return label.replace(/\s*\([a-fA-F0-9]+:[a-fA-F0-9]+\)$/, '');
 }
 

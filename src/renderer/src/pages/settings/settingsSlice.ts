@@ -1,13 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-// import {ApplicationSettings} from '../../../../main/types';
+import { ApplicationSettings } from '../../../../types';
 
 export const SETTINGS_SLICE_NAME = 'settings';
 
-export interface ISettingsSlice {
-  inactivityToggle: boolean;
-  inactivityTimer: number;
-}
+// export interface ISettingsSlice extends ApplicationSettings {}
 
 const loadedSettings = await window.api.getSettings();
 console.log(loadedSettings);
@@ -31,7 +28,7 @@ export const settingsSlice = createSlice({
       window.api.saveSettings({
         inactivityTimer: state.inactivityTimer,
         inactivityToggle: state.inactivityToggle,
-      } as ISettingsSlice);
+      } as ApplicationSettings);
     },
     setInactivityTimer: (state, action: PayloadAction<number>) => {
       state.inactivityTimer = action.payload;

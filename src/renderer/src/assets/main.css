@@ -125,8 +125,24 @@ code {
   background-color: var(--ev-button-alt-hover-bg);
 }
 
+.version-container {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  padding: 0 0.5rem;
+}
+
+.custom-version {
+  font-family: 'Menlo', 'Lucida Console', monospace;
+  padding: 0 0.5rem;
+  font-size: 14px;
+  line-height: 14px;
+  opacity: 0.8;
+  text-align: center;
+}
+
 .versions {
-  position: absolute;
+  /* position: absolute; */
   bottom: 30px;
   margin: 0 auto;
   padding: 15px 0;
@@ -239,6 +255,7 @@ code {
   width: 800px;
   flex-direction: column;
   max-width: 80vw;
+  flex-grow: 1;
 }
 
 /*
@@ -248,8 +265,7 @@ code {
   max-width: 75vw;
 } */
 
-
-.settings-container{
+.settings-container {
   width: 100vw;
   padding: 1rem;
   display: flex;
@@ -257,8 +273,31 @@ code {
 }
 
 .settings-content {
-  max-width: 800px;
+  width: 800px;
+  max-width: 80vw;
+  padding: 2rem;
   display: flex;
   justify-content: center;
   flex-direction: column;
+}
+
+.settings-title {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 0rem;
+}
+
+.settings-back-button-container {
+  flex: 1;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.settings-back-button-counterweight {
+  flex: 1;
+}
+
+.settings-card {
+
 }

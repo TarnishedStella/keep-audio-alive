@@ -12,7 +12,10 @@ import { useEffect, useRef } from 'react';
  * @param {string} channel - The name of the channel
  * @param {Function} listener - The handler function
  */
-const useIpcListener = (channel: string, listener: (event: any, ...args: any[]) => void) => {
+const useIpcListener = (
+  channel: string,
+  listener: (event: unknown, ...args: unknown[]) => void,
+): void => {
   const savedHandler = useRef(listener);
 
   useEffect(() => {
@@ -20,12 +23,13 @@ const useIpcListener = (channel: string, listener: (event: any, ...args: any[]) 
   }, [listener]);
 
   useEffect(() => {
-    const eventHandler = (event: any, ...args: any[]) => savedHandler.current(event, ...args);
+    const eventHandler = (event: unknown, ...args: unknown[]): void =>
+      savedHandler.current(event, ...args);
 
     // Access the electron API exposed via contextBridge
     const unsubscribe = window.api.on(channel, eventHandler);
 
-    return () => {
+    return (): void => {
       unsubscribe();
     };
   }, [channel]);

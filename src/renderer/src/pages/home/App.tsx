@@ -1,22 +1,23 @@
-import { ReactElement, useRef, useState } from 'react';
-import audioString from './assets/error.mp3';
-import AudioDeviceSelector from './components/AudioDeviceSelector';
-import ActiveAudioDevicesList from './components/ActiveAudioDevicesList';
-import Version from './components/Version';
-import { ActiveAudioDevice } from './Types';
+import { ReactElement, useState } from 'react';
+import audioString from '../../assets/error.mp3';
+import AudioDeviceSelector from '../../components/AudioDeviceSelector';
+import ActiveAudioDevicesList from '../../components/ActiveAudioDevicesList';
+import Version from '../../components/Version';
+import { ActiveAudioDevice } from '../../Types';
 import { useNavigate } from '@tanstack/react-router';
-import useIpcListener from './hooks';
+import useIpcListener from '../../hooks';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from './store';
 import {
   addActiveAudioDevice,
   PlaybackState,
   removeActiveAudioDevice,
   updatePlaybackStatus,
-} from './pages/home/homeSlice';
-import { useAudioRefs } from './components/AudioContext';
-import { selectActiveAudioDevices, selectDevicePlaybackStatuses } from './pages/home/selectors';
-import { selectIsInactivityToggled } from './pages/settings/selectors';
+} from './homeSlice';
+import { useAudioRefs } from '../../components/AudioContext';
+import { selectActiveAudioDevices, selectDevicePlaybackStatuses } from './selectors';
+import { selectIsInactivityToggled } from '../settings/selectors';
+import { Flex, IconButton } from '@radix-ui/themes';
+import { GearIcon } from '@radix-ui/react-icons';
 
 function App(): ReactElement {
   const navigate = useNavigate({ from: '/posts/$postId' });
@@ -30,7 +31,7 @@ function App(): ReactElement {
 
   const audioRefs = useAudioRefs();
 
-  const startAudio = async () => {
+  const startAudio = async (): Promise<void> => {
     if (selectedDevice) {
       const audio = new Audio(audioString);
       audio.loop = true;
@@ -58,7 +59,7 @@ function App(): ReactElement {
     }
   };
 
-  const stopAudio = (activeAudioDevice: ActiveAudioDevice) => {
+  const stopAudio = (activeAudioDevice: ActiveAudioDevice): void => {
     const audioElement = audioRefs[activeAudioDevice.mediaDeviceInfo.deviceId]?.current;
     audioElement!.pause();
     audioElement!.remove();
@@ -66,11 +67,11 @@ function App(): ReactElement {
     dispatch(removeActiveAudioDevice(activeAudioDevice));
   };
 
-  const userPausedAudio = (activeAudioDevice: ActiveAudioDevice) => {
+  const userPausedAudio = (activeAudioDevice: ActiveAudioDevice): void => {
     pauseAudio(activeAudioDevice, true);
   };
 
-  const pauseAudio = (activeAudioDevice: ActiveAudioDevice, userPaused: boolean) => {
+  const pauseAudio = (activeAudioDevice: ActiveAudioDevice, userPaused: boolean): void => {
     console.log(audioRefs);
 
     const audioElement = audioRefs[activeAudioDevice.mediaDeviceInfo.deviceId]?.current;
@@ -85,7 +86,7 @@ function App(): ReactElement {
     );
   };
 
-  const resumeAudio = (activeAudioDevice: ActiveAudioDevice) => {
+  const resumeAudio = (activeAudioDevice: ActiveAudioDevice): void => {
     const audioElement = audioRefs[activeAudioDevice.mediaDeviceInfo.deviceId]?.current;
     audioElement!.play();
 
@@ -97,7 +98,7 @@ function App(): ReactElement {
     );
   };
 
-  function pauseActiveDevices(userPaused: boolean) {
+  function pauseActiveDevices(userPaused: boolean): void {
     console.log('pausing devices');
     activeAudioDevices.forEach((device) => {
       const playbackState = devicePlaybackStatuses[device.mediaDeviceInfo.deviceId].playbackState;
@@ -107,7 +108,7 @@ function App(): ReactElement {
     });
   }
 
-  function resumeActiveDevices() {
+  function resumeActiveDevices(): void {
     console.log('resuming devices');
     activeAudioDevices.forEach((device) => {
       const playbackState = devicePlaybackStatuses[device.mediaDeviceInfo.deviceId].playbackState;
@@ -117,28 +118,28 @@ function App(): ReactElement {
     });
   }
 
-  useIpcListener('user-inactive', (event, ...args) => {
+  useIpcListener('user-inactive', () => {
     console.log('User is inactive!');
     if (isInactivityToggled) {
       pauseActiveDevices(false);
     }
   });
 
-  useIpcListener('user-active', (event, ...args) => {
+  useIpcListener('user-active', () => {
     console.log('User is active again!');
     if (isInactivityToggled) {
       resumeActiveDevices();
     }
   });
 
-  useIpcListener('pause-all', (event, ...args) => {
+  useIpcListener('pause-all', () => {
     console.log('pause-all');
     activeAudioDevices.forEach((device) => {
       pauseAudio(device, true);
     });
   });
 
-  useIpcListener('resume-all', (event, ...args) => {
+  useIpcListener('resume-all', () => {
     console.log('resume-all');
     activeAudioDevices.forEach((device) => {
       resumeAudio(device);
@@ -153,6 +154,7 @@ function App(): ReactElement {
             Keep Audio Alive
           </Text>
         </Box> */}
+
         <AudioDeviceSelector onSelectDevice={setSelectedDevice} onStartAudio={startAudio} />
         <ActiveAudioDevicesList
           activeAudioDevices={activeAudioDevices}
@@ -162,8 +164,20 @@ function App(): ReactElement {
           onStop={stopAudio}
         />
       </div>
-      <button onClick={() => navigate({ to: '/settings' })}>test</button>
-      <Version></Version>
+      <Flex justify={'end'} mb={'3'}>
+        {/* <Text as="div" size="6" weight="regular" align="center" style={{ paddingRight: '1rem' }}>
+          Home
+        </Text> */}
+        <Version></Version>
+        <IconButton
+          onClick={() => navigate({ to: '/settings' })}
+          variant="soft"
+          size="2"
+          color="gray"
+        >
+          <GearIcon width="18" height="18" />
+        </IconButton>
+      </Flex>
     </div>
   );
 }

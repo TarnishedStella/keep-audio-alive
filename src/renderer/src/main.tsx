@@ -3,21 +3,15 @@ import '@radix-ui/themes/styles.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
+// import App from './pages/home/App';
 import { Theme } from '@radix-ui/themes';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { createRoute, createRouter, RouterProvider } from '@tanstack/react-router';
+import { createRouter, RouterProvider } from '@tanstack/react-router';
 import { Route } from './routes/__root';
-import { settingsRoute } from './routes/settings.lazy';
+import { indexRoute, settingsRoute } from './routes/settings.lazy';
 import { Provider } from 'react-redux';
 import store from './store';
 import { AudioProvider } from './components/AudioContext';
-
-const indexRoute = createRoute({
-  getParentRoute: () => Route,
-  path: '/',
-  component: App,
-});
 
 const routeTree = Route.addChildren([indexRoute, settingsRoute]);
 
