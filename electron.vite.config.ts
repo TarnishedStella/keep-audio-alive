@@ -13,6 +13,8 @@ export default defineConfig({
     resolve: {
       alias: {
         '@renderer': resolve('src/renderer/src'),
+        '@common': resolve('src/common'),
+        '@node-resources': resolve('resources'),
       },
     },
     plugins: [react()],

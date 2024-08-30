@@ -1,8 +1,10 @@
-import { ReactElement } from 'react';
-import React from 'react';
-import { Switch, Select, Text, IconButton } from '@radix-ui/themes';
-import { Box, Flex } from '@radix-ui/themes';
-import { setInactivityTimer, setInactivityToggle, setRememberLastStateToggle } from '@renderer/pages/settings/settingsSlice';
+import React, { ReactElement } from 'react';
+import { Switch, Select, Text, IconButton, Box, Flex } from '@radix-ui/themes';
+import {
+  setInactivityTimer,
+  setInactivityToggle,
+  setRememberLastStateToggle,
+} from '@renderer/pages/settings/settingsSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import {
   selectInactivityTimer,
@@ -44,13 +46,13 @@ const Settings: React.FunctionComponent = (): ReactElement => {
         <div className="settings-title">
           <div className="settings-back-button-container">
             <IconButton variant="soft" size="2" color="gray" onClick={() => navigate({ to: '/' })}>
-              <ArrowLeftIcon width="18" height="18"></ArrowLeftIcon>
+              <ArrowLeftIcon width="18" height="18" />
             </IconButton>
           </div>
           <Text as="div" size="5" weight="bold" align="center" style={{ flex: '1 1 auto' }}>
             Settings
           </Text>
-          <div className="settings-back-button-counterweight"></div>
+          <div className="settings-back-button-counterweight" />
         </div>
 
         <div
@@ -62,10 +64,10 @@ const Settings: React.FunctionComponent = (): ReactElement => {
             borderRadius: 'var(--radius-3)',
           }}
         >
-          <Flex direction="column" gap="1rem" width={'100%'}>
+          <Flex direction="column" gap="1rem" width="100%">
             <Flex>
-              <Box flexGrow={'1'}>
-                <Text as="div" size="2" mb={'0.5rem'} weight="regular">
+              <Box flexGrow="1">
+                <Text as="div" size="2" mb="0.5rem" weight="regular">
                   Idle Detection
                 </Text>
                 <Switch
@@ -76,8 +78,8 @@ const Settings: React.FunctionComponent = (): ReactElement => {
               </Box>
 
               {isIdleDetectionEnabled && (
-                <Box flexGrow={'5'}>
-                  <Text as="div" size="2" mb={'0.5rem'} weight="regular">
+                <Box flexGrow="5">
+                  <Text as="div" size="2" mb="0.5rem" weight="regular">
                     Idle Detection Time
                   </Text>
                   <Select.Root
@@ -102,7 +104,7 @@ const Settings: React.FunctionComponent = (): ReactElement => {
             </Flex>
 
             <Box>
-              <Text as="div" size="2" mb={'0.5rem'} weight="regular">
+              <Text as="div" size="2" mb="0.5rem" weight="regular">
                 Remember Device State
               </Text>
               <Switch
@@ -111,10 +113,6 @@ const Settings: React.FunctionComponent = (): ReactElement => {
                 name="Enable Idle Detection"
               />
             </Box>
-
-            {/* <Flex justify={'center'}>
-              <button onClick={() => navigate({ to: '/' })}>Done</button>
-            </Flex> */}
           </Flex>
         </div>
       </div>

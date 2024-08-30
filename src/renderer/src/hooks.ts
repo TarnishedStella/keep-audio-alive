@@ -1,11 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useRef } from 'react';
 import type { RootState, AppDispatch } from './store';
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
 export const useAppSelector = useSelector.withTypes<RootState>();
-
-import { useEffect, useRef } from 'react';
 
 /**
  * Custom React Hook that listens to a channel. When a new message arrives `listener` is called with `listener(event, args...)`.

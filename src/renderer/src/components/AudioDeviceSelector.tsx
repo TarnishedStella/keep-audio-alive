@@ -2,7 +2,7 @@ import React from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Select, IconButton } from '@radix-ui/themes';
 import { ReloadIcon, PlusIcon } from '@radix-ui/react-icons';
-import { filterAudioDeviceLabel } from './helpers';
+import { filterAudioDeviceLabel } from '@renderer/components/helpers';
 
 interface AudioDeviceSelectorProps {
   onSelectDevice: (device: MediaDeviceInfo | null) => void;
@@ -33,7 +33,7 @@ const AudioDeviceSelector: React.FC<AudioDeviceSelectorProps> = ({
   return (
     <div className="selector-container">
       <div className="selection-box">
-        <Select.Root size={'2'} onValueChange={handleDeviceChange}>
+        <Select.Root size="2" onValueChange={handleDeviceChange}>
           <Select.Trigger
             radius="large"
             placeholder="Select an Audio Device"

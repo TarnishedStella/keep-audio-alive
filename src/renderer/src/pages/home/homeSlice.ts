@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ActiveAudioDevice } from '../../types';
-import { IPlaybackStatus, PlaybackState } from '../../../../types';
+import { ActiveAudioDevice } from '@renderer/types';
+import { IPlaybackStatus, PlaybackState } from '@common/types';
 
 export const HOME_SLICE_NAME = 'home';
 
@@ -26,7 +26,7 @@ const initialState: IHomeSlice = {
 
 export const homeSlice = createSlice({
   name: HOME_SLICE_NAME,
-  initialState: initialState,
+  initialState,
   reducers: {
     setSelectedDevice: (state, action: PayloadAction<MediaDeviceInfo | null>) => {
       state.audioManager.selectedDevice = action.payload;

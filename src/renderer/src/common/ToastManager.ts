@@ -10,7 +10,6 @@ export function showErrorToast(message: string): void {
   });
 }
 
-
 export function showSuccessToast(message: string): void {
   toast.success(message, {
     style: {

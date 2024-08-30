@@ -1,33 +1,33 @@
 import { ReactElement, useEffect, useState } from 'react';
-import audioString from '../../assets/error.mp3';
-import AudioDeviceSelector from '../../components/AudioDeviceSelector';
-import ActiveAudioDevicesList from '../../components/ActiveAudioDevicesList';
-import Version from '../../components/Version';
-import { ActiveAudioDevice } from '../../types';
+import audioString from '@renderer/assets/test-sound.mp3';
+import AudioDeviceSelector from '@renderer/components/AudioDeviceSelector';
+import ActiveAudioDevicesList from '@renderer/components/ActiveAudioDevicesList';
+import Version from '@renderer/components/Version';
+import { ActiveAudioDevice } from '@renderer/types';
 import { useNavigate } from '@tanstack/react-router';
-import useIpcListener from '../../hooks';
+import useIpcListener from '@renderer/hooks';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   addActiveAudioDevice,
   removeActiveAudioDevice,
   setInitialized,
   updatePlaybackStatus,
-} from './homeSlice';
-import { useAudioRefs } from '../../components/AudioContext';
+} from '@renderer/pages/home/homeSlice';
+import { useAudioRefs } from '@renderer/components/AudioContext';
 import {
   selectActiveAudioDevices,
   selectDevicePlaybackStatuses,
   selectIsInitialized,
-} from './selectors';
+} from '@renderer/pages/home/selectors';
 import {
   selectDevicesState,
   selectIsInactivityToggled,
   selectIsRememberLastStateToggled,
-} from '../settings/selectors';
+} from '@renderer/pages/settings/selectors';
 import { Flex, IconButton, Text } from '@radix-ui/themes';
 import { GearIcon } from '@radix-ui/react-icons';
-import { MediaDeviceInfoCustom, PlaybackState } from '../../../../types';
-import { setDeviceStates } from '../settings/settingsSlice';
+import { MediaDeviceInfoCustom, PlaybackState } from '@common/types';
+import { setDeviceStates } from '@renderer/pages/settings/settingsSlice';
 import { showErrorToast } from '@renderer/common/ToastManager';
 
 function HomePage(): ReactElement {
@@ -156,7 +156,7 @@ function HomePage(): ReactElement {
   function pauseActiveDevices(userPaused: boolean): void {
     console.log('pausing devices');
     activeAudioDevices.forEach((device) => {
-      const playbackState = devicePlaybackStatuses[device.mediaDeviceInfo.deviceId].playbackState;
+      const { playbackState } = devicePlaybackStatuses[device.mediaDeviceInfo.deviceId];
       if (playbackState === PlaybackState.Playing) {
         pauseAudio(device, userPaused);
       }
@@ -166,7 +166,7 @@ function HomePage(): ReactElement {
   function resumeActiveDevices(): void {
     console.log('resuming devices');
     activeAudioDevices.forEach((device) => {
-      const playbackState = devicePlaybackStatuses[device.mediaDeviceInfo.deviceId].playbackState;
+      const { playbackState } = devicePlaybackStatuses[device.mediaDeviceInfo.deviceId];
       if (playbackState === PlaybackState.IdlePaused) {
         resumeAudio(device);
       }
@@ -205,7 +205,7 @@ function HomePage(): ReactElement {
     <div className="main-container">
       <div className="component-container">
         <div className="settings-title">
-          <div className="flex-1"></div>
+          <div className="flex-1" />
           <Text as="div" size="5" weight="bold" align="center" style={{ flex: '1 1 auto' }}>
             Home
           </Text>
@@ -230,8 +230,8 @@ function HomePage(): ReactElement {
           onStop={stopAudio}
         />
       </div>
-      <Flex justify={'center'}>
-        <Version></Version>
+      <Flex justify="center">
+        <Version />
       </Flex>
     </div>
   );

@@ -4,7 +4,7 @@ import { DownloadIcon } from '@radix-ui/react-icons';
 
 function Version(): JSX.Element {
   const [appVersion, setAppVersion] = useState<string>('');
-  const [hasUpdate] = useState<boolean>(false); //TODO: Implement this
+  const [hasUpdate] = useState<boolean>(false); // TODO: Implement this
 
   useEffect(() => {
     const fetchCurrentVersion = async (): Promise<void> => {
@@ -20,7 +20,7 @@ function Version(): JSX.Element {
       <Text className="custom-version">KeepAudioAlive v{appVersion}</Text>
       {hasUpdate && (
         <IconButton>
-          <DownloadIcon></DownloadIcon>
+          <DownloadIcon />
         </IconButton>
       )}
     </div>

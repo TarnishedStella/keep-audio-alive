@@ -1,7 +1,7 @@
 import { app, ipcMain } from 'electron';
 import fs from 'fs';
 import path from 'path';
-import { ApplicationSettings } from '../types';
+import { ApplicationSettings } from '@common/types';
 
 const settingsPath = path.join(app.getPath('userData'), 'settings.json');
 
@@ -10,16 +10,15 @@ export function loadSettings(): ApplicationSettings {
     if (fs.existsSync(settingsPath)) {
       const data = fs.readFileSync(settingsPath, 'utf-8');
       return JSON.parse(data);
-    } else {
-      const defaultSettings: ApplicationSettings = {
-        inactivityToggle: true,
-        inactivityTimer: 15,
-        rememberLastState: true,
-        devicesState: {},
-      };
-      saveSettings(defaultSettings);
-      return defaultSettings;
     }
+    const defaultSettings: ApplicationSettings = {
+      inactivityToggle: true,
+      inactivityTimer: 15,
+      rememberLastState: true,
+      devicesState: {},
+    };
+    saveSettings(defaultSettings);
+    return defaultSettings;
   } catch (error) {
     console.error('Failed to load settings:', error);
     throw error;

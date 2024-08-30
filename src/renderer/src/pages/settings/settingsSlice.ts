@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { ApplicationSettings } from '../../../../types';
+import { ApplicationSettings } from '@common/types';
 import { showErrorToast } from '@renderer/common/ToastManager';
 
 export const SETTINGS_SLICE_NAME = 'settings';

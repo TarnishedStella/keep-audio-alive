@@ -22,7 +22,7 @@ const ActiveAudioDeviceCard: React.FC<ActiveAudioDeviceCardProps> = ({
   return (
     <Card key={device.mediaDeviceInfo.deviceId}>
       <div className="card-grid">
-        <Text className="card-title" size={'2'}>
+        <Text className="card-title" size="2">
           {filterAudioDeviceLabel(device.mediaDeviceInfo.label) || 'Unknown Device'}
         </Text>
         <div className="card-buttons">
