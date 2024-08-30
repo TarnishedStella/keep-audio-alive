@@ -52,7 +52,7 @@ const Settings: React.FunctionComponent = (): ReactElement => {
           <Text as="div" size="5" weight="bold" align="center" style={{ flex: '1 1 auto' }}>
             Settings
           </Text>
-          <div className="settings-back-button-counterweight" />
+          <div className="flex-1" />
         </div>
 
         <div

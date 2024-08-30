@@ -17,7 +17,7 @@ function Version(): JSX.Element {
 
   return (
     <div className="version-container">
-      <Text className="custom-version">KeepAudioAlive v{appVersion}</Text>
+      <Text className="version-text">KeepAudioAlive v{appVersion}</Text>
       {hasUpdate && (
         <IconButton>
           <DownloadIcon />
