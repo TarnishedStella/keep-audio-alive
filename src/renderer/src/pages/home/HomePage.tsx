@@ -1,5 +1,5 @@
 import { ReactElement, useEffect, useState } from 'react';
-import audioString from '@renderer/assets/test-sound.mp3';
+import audioString from '@renderer/assets/nothing.mp3';
 import AudioDeviceSelector from '@renderer/components/AudioDeviceSelector';
 import ActiveAudioDevicesList from '@renderer/components/ActiveAudioDevicesList';
 import Version from '@renderer/components/Version';

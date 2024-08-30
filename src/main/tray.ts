@@ -1,5 +1,5 @@
 import { Tray, Menu, app, BrowserWindow } from 'electron';
-import icon from '../../resources/icon.png?asset';
+import icon from '../../resources/favicon.ico?asset';
 
 let isPlaying = false;
 
