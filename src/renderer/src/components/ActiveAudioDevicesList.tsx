@@ -1,7 +1,7 @@
 import React from 'react';
 import { Flex, Text } from '@radix-ui/themes';
 import ActiveAudioDeviceCard from './ActiveAudioDeviceCard';
-import { ActiveAudioDevice } from '@renderer/Types';
+import { ActiveAudioDevice } from '@renderer/types';
 import { IPlaybackStatus, PlaybackState } from '../../../types';
 
 interface ActiveAudioDevicesListProps {

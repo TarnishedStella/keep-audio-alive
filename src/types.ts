@@ -12,8 +12,6 @@ export interface MediaDeviceInfoCustom {
   readonly label: string;
 }
 
-
-
 export enum PlaybackState {
   Playing,
   IdlePaused,
@@ -21,6 +19,6 @@ export enum PlaybackState {
 }
 
 export interface IPlaybackStatus {
-  deviceId: string;
+  deviceDetails: MediaDeviceInfoCustom;
   playbackState: PlaybackState;
 }

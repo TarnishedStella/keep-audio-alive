@@ -2,6 +2,7 @@ import React from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Select, IconButton } from '@radix-ui/themes';
 import { ReloadIcon, PlusIcon } from '@radix-ui/react-icons';
+import { filterAudioDeviceLabel } from './helpers';
 
 interface AudioDeviceSelectorProps {
   onSelectDevice: (device: MediaDeviceInfo | null) => void;
@@ -63,10 +64,6 @@ const AudioDeviceSelector: React.FC<AudioDeviceSelectorProps> = ({
 async function listAudioDevices(): Promise<MediaDeviceInfo[]> {
   const devices = await navigator.mediaDevices.enumerateDevices();
   return devices.filter((device) => device.kind === 'audiooutput');
-}
-
-function filterAudioDeviceLabel(label: string): string {
-  return label.replace(/\s*\([a-fA-F0-9]+:[a-fA-F0-9]+\)$/, '');
 }
 
 export default AudioDeviceSelector;

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ActiveAudioDevice } from '../../Types';
+import { ActiveAudioDevice } from '../../types';
 import { IPlaybackStatus, PlaybackState } from '../../../../types';
 
 export const HOME_SLICE_NAME = 'home';
@@ -44,7 +44,8 @@ export const homeSlice = createSlice({
       delete state.audioManager.devicePlaybackStatuses[action.payload.mediaDeviceInfo.deviceId];
     },
     updatePlaybackStatus: (state, action: PayloadAction<IPlaybackStatus>) => {
-      state.audioManager.devicePlaybackStatuses[action.payload.deviceId] = action.payload;
+      state.audioManager.devicePlaybackStatuses[action.payload.deviceDetails.deviceId] =
+        action.payload;
 
       if (state.audioManager.activeAudioDevices.length > 0) {
         // if anything is playing, send a message to the main process ot update the tray icon

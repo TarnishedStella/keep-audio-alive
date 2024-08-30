@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ApplicationSettings } from '../../../../types';
+import { showErrorToast } from '@renderer/common/ToastManager';
 
 export const SETTINGS_SLICE_NAME = 'settings';
 
@@ -56,7 +57,10 @@ function saveCurrentState(state): void {
 
     window.api.saveSettingsJson(settingsJson);
   } catch (e) {
-    console.log(e);
+    if (e instanceof Error) {
+      console.log(e);
+      showErrorToast(`Failed to save settings: ${e.message}`);
+    }
   }
 }
 

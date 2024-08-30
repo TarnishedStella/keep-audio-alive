@@ -1,7 +1,8 @@
 import React from 'react';
 import { Card, IconButton, Text } from '@radix-ui/themes';
 import { PauseIcon, StopIcon, ResumeIcon } from '@radix-ui/react-icons';
-import { ActiveAudioDevice } from '@renderer/Types';
+import { ActiveAudioDevice } from '@renderer/types';
+import { filterAudioDeviceLabel } from './helpers';
 
 interface ActiveAudioDeviceCardProps {
   device: ActiveAudioDevice;
@@ -11,12 +12,18 @@ interface ActiveAudioDeviceCardProps {
   isPaused: boolean;
 }
 
-const ActiveAudioDeviceCard: React.FC<ActiveAudioDeviceCardProps> = ({ device, onPause, onResume, onStop, isPaused }) => {
+const ActiveAudioDeviceCard: React.FC<ActiveAudioDeviceCardProps> = ({
+  device,
+  onPause,
+  onResume,
+  onStop,
+  isPaused,
+}) => {
   return (
     <Card key={device.mediaDeviceInfo.deviceId}>
       <div className="card-grid">
         <Text className="card-title" size={'2'}>
-          {device.mediaDeviceInfo.label || 'Unknown Device'}
+          {filterAudioDeviceLabel(device.mediaDeviceInfo.label) || 'Unknown Device'}
         </Text>
         <div className="card-buttons">
           <IconButton onClick={onStop} variant="soft" size="2" color="red">

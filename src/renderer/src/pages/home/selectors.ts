@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { RootState } from '@renderer/store';
 
 export const selectActiveAudioDevices = (state: RootState) =>
