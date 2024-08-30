@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import audioString from '../../assets/error.mp3';
 import AudioDeviceSelector from '../../components/AudioDeviceSelector';
 import ActiveAudioDevicesList from '../../components/ActiveAudioDevicesList';
@@ -9,30 +9,73 @@ import useIpcListener from '../../hooks';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   addActiveAudioDevice,
-  PlaybackState,
   removeActiveAudioDevice,
+  setInitialized,
   updatePlaybackStatus,
 } from './homeSlice';
 import { useAudioRefs } from '../../components/AudioContext';
-import { selectActiveAudioDevices, selectDevicePlaybackStatuses } from './selectors';
-import { selectIsInactivityToggled } from '../settings/selectors';
+import {
+  selectActiveAudioDevices,
+  selectDevicePlaybackStatuses,
+  selectIsInitialized,
+} from './selectors';
+import { selectDevicesState, selectIsInactivityToggled, selectIsRememberLastStateToggled } from '../settings/selectors';
 import { Flex, IconButton, Text } from '@radix-ui/themes';
 import { GearIcon } from '@radix-ui/react-icons';
+import { PlaybackState } from '../../../../types';
+import toast from 'react-hot-toast';
+import { setDeviceStates } from '../settings/settingsSlice';
 
-function App(): ReactElement {
-  const navigate = useNavigate({ from: '/posts/$postId' });
-
+function HomePage(): ReactElement {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const [selectedDevice, setSelectedDevice] = useState<MediaDeviceInfo | null>(null);
 
   const activeAudioDevices = useSelector(selectActiveAudioDevices);
   const devicePlaybackStatuses = useSelector(selectDevicePlaybackStatuses);
   const isInactivityToggled = useSelector(selectIsInactivityToggled);
 
+  const isRememberLastState = useSelector(selectIsRememberLastStateToggled);
+  const isInitialized = useSelector(selectIsInitialized);
+  const rememberedDevices = useSelector(selectDevicesState);
+
   const audioRefs = useAudioRefs();
+
+  useEffect(() => {
+    console.log("useEffect!")
+    if (!isInitialized) {
+      console.log("hey!")
+      // Run the function here
+      if (isRememberLastState) {
+        // do the thing
+        console.log("remember")
+        console.log(rememberedDevices, "rememebred devicews")
+        Object.entries(rememberedDevices).forEach(([key, status]) => {
+          console.log(`Device ID: ${key}, Playback State: ${status.playbackState}`);
+          console.log(key, "key");
+          console.log(status, 'status');
+
+          StartAudioWork(status.deviceId, status.playbackState);
+          //console.
+        });
+      }
+      dispatch(setInitialized());
+    }
+  }, []);
 
   const startAudio = async (): Promise<void> => {
     if (selectedDevice) {
+      if (activeAudioDevices.find((x) => x.mediaDeviceInfo.deviceId === selectedDevice.deviceId)) {
+        toast.error('Device is already playing!', {
+          style: {
+            background: 'var(--color-background-mute)',
+            color: 'var(--color-text)',
+          },
+        });
+        return;
+      }
+
       const audio = new Audio(audioString);
       audio.loop = true;
       await audio.setSinkId(selectedDevice.deviceId);
@@ -59,12 +102,46 @@ function App(): ReactElement {
     }
   };
 
+  async function StartAudioWork(deviceId, status){
+    const audio = new Audio(audioString);
+    audio.loop = true;
+    await audio.setSinkId(deviceId);
+    audio.play();
+
+    audioRefs[deviceId] = { current: audio };
+
+    const newActiveAudio: ActiveAudioDevice = {
+      mediaDeviceInfo: {
+        deviceId: deviceId,
+        groupId: '',
+        kind: undefined,
+        label: 'selectedDevice.label',
+      },
+    };
+
+    dispatch(addActiveAudioDevice(newActiveAudio));
+    dispatch(
+      updatePlaybackStatus({
+        deviceId: newActiveAudio.mediaDeviceInfo.deviceId,
+        playbackState: status,
+      }),
+    );
+  }
+
+  useEffect(() => {
+    if (devicePlaybackStatuses) {
+      console.log(devicePlaybackStatuses);
+      dispatch(setDeviceStates(devicePlaybackStatuses));
+    }
+  }, [devicePlaybackStatuses, dispatch]);
+
   const stopAudio = (activeAudioDevice: ActiveAudioDevice): void => {
     const audioElement = audioRefs[activeAudioDevice.mediaDeviceInfo.deviceId]?.current;
     audioElement!.pause();
     audioElement!.remove();
 
     dispatch(removeActiveAudioDevice(activeAudioDevice));
+    dispatch(setDeviceStates(devicePlaybackStatuses));
   };
 
   const userPausedAudio = (activeAudioDevice: ActiveAudioDevice): void => {
@@ -84,6 +161,7 @@ function App(): ReactElement {
         playbackState: userPaused ? PlaybackState.UserPaused : PlaybackState.IdlePaused,
       }),
     );
+    dispatch(setDeviceStates(devicePlaybackStatuses));
   };
 
   const resumeAudio = (activeAudioDevice: ActiveAudioDevice): void => {
@@ -96,6 +174,7 @@ function App(): ReactElement {
         playbackState: PlaybackState.Playing,
       }),
     );
+    dispatch(setDeviceStates(devicePlaybackStatuses));
   };
 
   function pauseActiveDevices(userPaused: boolean): void {
@@ -175,22 +254,11 @@ function App(): ReactElement {
           onStop={stopAudio}
         />
       </div>
-      <Flex className='version-container2' justify={'center'}>
-        {/* <Text as="div" size="6" weight="regular" align="center" style={{ paddingRight: '1rem' }}>
-          Home
-        </Text> */}
+      <Flex justify={'center'}>
         <Version></Version>
-        {/* <IconButton
-          onClick={() => navigate({ to: '/settings' })}
-          variant="soft"
-          size="2"
-          color="gray"
-        >
-          <GearIcon width="18" height="18" />
-        </IconButton> */}
       </Flex>
     </div>
   );
 }
 
-export default App;
+export default HomePage;

@@ -258,12 +258,6 @@ code {
   flex-grow: 1;
 }
 
-.version-container2 {
-  width: 100%;
-  width: 800px;
-  max-width: 80vw;
-  padding: 0rem 2rem;
-}
 
 /*
 .audio-selection {

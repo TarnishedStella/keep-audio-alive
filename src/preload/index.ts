@@ -8,6 +8,8 @@ const api = {
   getSettings: (): Promise<ApplicationSettings> => ipcRenderer.invoke('load-settings'),
   saveSettings: (settingsData: ApplicationSettings): Promise<void> =>
     ipcRenderer.invoke('save-settings', settingsData),
+  saveSettingsJson: (settingsJson: string): Promise<void> =>
+    ipcRenderer.invoke('save-settings-json', settingsJson),
   playingAudio: (): Promise<void> => ipcRenderer.invoke('playing-audio'),
   notPlayingAudio: (): Promise<void> => ipcRenderer.invoke('not-playing-audio'),
   on: (channel: string, listener: (...args: unknown[]) => void) => {

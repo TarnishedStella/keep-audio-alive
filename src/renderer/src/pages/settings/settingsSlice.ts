@@ -25,19 +25,49 @@ export const settingsSlice = createSlice({
     },
     setInactivityToggle: (state, action) => {
       state.inactivityToggle = action.payload;
-      window.api.saveSettings({
-        inactivityTimer: state.inactivityTimer,
-        inactivityToggle: state.inactivityToggle,
-      } as ApplicationSettings);
+      saveCurrentState(state);
     },
     setInactivityTimer: (state, action: PayloadAction<number>) => {
       state.inactivityTimer = action.payload;
+      saveCurrentState(state);
+    },
+    setRememberLastStateToggle: (state, action) => {
+      state.rememberLastState = action.payload;
+      saveCurrentState(state);
+    },
+
+    setDeviceStates: (state, action) => {
+      state.devicesState = action.payload;
+      saveCurrentState(state);
     },
   },
 });
 
+function saveCurrentState(state): void {
+  try {
+    const tmp = {
+      inactivityTimer: state.inactivityTimer,
+      inactivityToggle: state.inactivityToggle,
+      rememberLastState: state.rememberLastState,
+      devicesState: state.devicesState,
+    } as ApplicationSettings;
+    const settingsJson = JSON.stringify(tmp, null, 2);
+    console.log(settingsJson);
+
+    window.api.saveSettingsJson(settingsJson);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 // Action creators are generated for each case reducer function
-export const { toggleOn, toggleOff, setInactivityToggle, setInactivityTimer } =
-  settingsSlice.actions;
+export const {
+  toggleOn,
+  toggleOff,
+  setInactivityToggle,
+  setInactivityTimer,
+  setRememberLastStateToggle,
+  setDeviceStates,
+} = settingsSlice.actions;
 
 export default settingsSlice.reducer;

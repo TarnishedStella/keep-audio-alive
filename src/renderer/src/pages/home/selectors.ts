@@ -5,3 +5,5 @@ export const selectActiveAudioDevices = (state: RootState) =>
 
 export const selectDevicePlaybackStatuses = (state: RootState) =>
   state.home.audioManager.devicePlaybackStatuses;
+
+export const selectIsInitialized = (state: RootState) => state.home.audioManager.initialized;

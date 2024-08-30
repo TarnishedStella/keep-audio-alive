@@ -4547,7 +4547,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"goober@npm:^2.1.14":
+"goober@npm:^2.1.10, goober@npm:^2.1.14":
   version: 2.1.14
   resolution: "goober@npm:2.1.14"
   peerDependencies:
@@ -5316,6 +5316,7 @@ __metadata:
     prettier: "npm:^3.3.2"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
+    react-hot-toast: "npm:^2.4.1"
     react-redux: "npm:^9.1.2"
     sound-play: "npm:^1.1.0"
     typescript: "npm:^5.5.2"
@@ -6062,6 +6063,18 @@ __metadata:
   peerDependencies:
     react: ^18.3.1
   checksum: 10c0/a752496c1941f958f2e8ac56239172296fcddce1365ce45222d04a1947e0cc5547df3e8447f855a81d6d39f008d7c32eab43db3712077f09e3f67c4874973e85
+  languageName: node
+  linkType: hard
+
+"react-hot-toast@npm:^2.4.1":
+  version: 2.4.1
+  resolution: "react-hot-toast@npm:2.4.1"
+  dependencies:
+    goober: "npm:^2.1.10"
+  peerDependencies:
+    react: ">=16"
+    react-dom: ">=16"
+  checksum: 10c0/591ecec3c6adc1cdb70f00165a57baa3d7f75d0d30fa767213c36496bdcc6be2b2e6a3edbf7c04f7d726a1b17dcfb5e7feb2136b04b17c9ccb769894b970f365
   languageName: node
   linkType: hard
 

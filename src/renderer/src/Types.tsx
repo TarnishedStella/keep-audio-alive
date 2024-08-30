@@ -1,8 +1,5 @@
 export interface ActiveAudioDevice {
   mediaDeviceInfo: MediaDeviceInfoCustom;
-
-  // htmlAudioElement: HTMLAudioElement;
-  //htmlAudioElement: React.RefObject<HTMLAudioElement>;
 }
 
 export interface MediaDeviceInfoCustom {

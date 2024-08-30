@@ -1,23 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ActiveAudioDevice } from '../../Types';
+import { IPlaybackStatus, PlaybackState } from '../../../../types';
 
 export const HOME_SLICE_NAME = 'home';
-
-export enum PlaybackState {
-  Playing,
-  IdlePaused,
-  UserPaused,
-}
-
-export interface IPlaybackStatus {
-  deviceId: string;
-  playbackState: PlaybackState;
-}
 
 interface AudioManager {
   selectedDevice: MediaDeviceInfo | null;
   activeAudioDevices: ActiveAudioDevice[];
   devicePlaybackStatuses: Record<string, IPlaybackStatus>;
+  initialized: boolean;
 }
 
 export interface IHomeSlice {
@@ -25,7 +16,12 @@ export interface IHomeSlice {
 }
 
 const initialState: IHomeSlice = {
-  audioManager: { selectedDevice: null, activeAudioDevices: [], devicePlaybackStatuses: {} },
+  audioManager: {
+    selectedDevice: null,
+    activeAudioDevices: [],
+    devicePlaybackStatuses: {},
+    initialized: false,
+  },
 };
 
 export const homeSlice = createSlice({
@@ -68,6 +64,10 @@ export const homeSlice = createSlice({
         }
       }
     },
+    setInitialized: (state) => {
+      console.log('initialized!');
+      state.audioManager.initialized = true;
+    },
   },
 });
 
@@ -76,6 +76,7 @@ export const {
   addActiveAudioDevice,
   removeActiveAudioDevice,
   updatePlaybackStatus,
+  setInitialized,
 } = homeSlice.actions;
 
 export default homeSlice.reducer;

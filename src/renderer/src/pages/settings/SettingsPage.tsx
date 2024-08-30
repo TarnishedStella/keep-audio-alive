@@ -2,11 +2,12 @@ import { ReactElement } from 'react';
 import React from 'react';
 import { Switch, Select, Text, IconButton } from '@radix-ui/themes';
 import { Box, Flex } from '@radix-ui/themes';
-import { setInactivityTimer, setInactivityToggle } from '@renderer/pages/settings/settingsSlice';
+import { setInactivityTimer, setInactivityToggle, setRememberLastStateToggle } from '@renderer/pages/settings/settingsSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import {
   selectInactivityTimer,
   selectIsInactivityToggled,
+  selectIsRememberLastStateToggled,
 } from '@renderer/pages/settings/selectors';
 import { useNavigate } from '@tanstack/react-router';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
@@ -18,12 +19,19 @@ const idleTimes = [5, 10, 15, 30, 60]; // Idle detection times in minutes
 const Settings: React.FunctionComponent = (): ReactElement => {
   const navigate = useNavigate();
 
-  const isToggled = useAppSelector(selectIsInactivityToggled);
+  const isIdleDetectionEnabled = useAppSelector(selectIsInactivityToggled);
   const idleDetectionTime = useAppSelector(selectInactivityTimer);
+
+  const isRememberDeviceStateEnabled = useAppSelector(selectIsRememberLastStateToggled);
+
   const dispatch = useAppDispatch();
 
-  function handleToggleChange(): void {
-    dispatch(setInactivityToggle(!isToggled));
+  function handleIdleDetectionToggle(): void {
+    dispatch(setInactivityToggle(!isIdleDetectionEnabled));
+  }
+
+  function handleRememberDeviceStateToggle(): void {
+    dispatch(setRememberLastStateToggle(!isRememberDeviceStateEnabled));
   }
 
   function handleDropdownChange(value: string): void {
@@ -57,19 +65,19 @@ const Settings: React.FunctionComponent = (): ReactElement => {
           <Flex direction="column" gap="1rem" width={'100%'}>
             <Flex>
               <Box flexGrow={'1'}>
-                <Text as="div" size="2" weight="regular">
+                <Text as="div" size="2" mb={'0.5rem'} weight="regular">
                   Idle Detection
                 </Text>
                 <Switch
-                  checked={isToggled}
-                  onCheckedChange={handleToggleChange}
+                  checked={isIdleDetectionEnabled}
+                  onCheckedChange={handleIdleDetectionToggle}
                   name="Enable Idle Detection"
                 />
               </Box>
 
-              {isToggled && (
+              {isIdleDetectionEnabled && (
                 <Box flexGrow={'5'}>
-                  <Text as="div" size="2" weight="regular">
+                  <Text as="div" size="2" mb={'0.5rem'} weight="regular">
                     Idle Detection Time
                   </Text>
                   <Select.Root
@@ -92,6 +100,17 @@ const Settings: React.FunctionComponent = (): ReactElement => {
                 </Box>
               )}
             </Flex>
+
+            <Box>
+              <Text as="div" size="2" mb={'0.5rem'} weight="regular">
+                Remember Device State
+              </Text>
+              <Switch
+                checked={isRememberDeviceStateEnabled}
+                onCheckedChange={handleRememberDeviceStateToggle}
+                name="Enable Idle Detection"
+              />
+            </Box>
 
             {/* <Flex justify={'center'}>
               <button onClick={() => navigate({ to: '/' })}>Done</button>

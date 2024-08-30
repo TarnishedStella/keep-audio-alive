@@ -1,7 +1,7 @@
 import { createRoute } from '@tanstack/react-router';
 import { Route } from './__root';
 import Settings from '@renderer/pages/settings/SettingsPage';
-import App from '@renderer/pages/home/App';
+import HomePage from '@renderer/pages/home/HomePage';
 
 export const settingsRoute = createRoute({
   getParentRoute: () => Route,
@@ -12,5 +12,5 @@ export const settingsRoute = createRoute({
 export const indexRoute = createRoute({
   getParentRoute: () => Route,
   path: '/',
-  component: App,
+  component: HomePage,
 });
