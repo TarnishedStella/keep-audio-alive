@@ -1,12 +1,11 @@
 import { powerMonitor, BrowserWindow } from 'electron';
+import { getSettingsFromMemory } from './settings';
 
-const INACTIVITY_THRESHOLD = 5; // 1 minute
-const CHECK_INTERVAL = 1000; // 10 seconds
+const MS_PER_SEC = 1000;
+const SEC_PER_MIN = 60;
+const CHECK_INTERVAL = 10 * MS_PER_SEC;
 
-function checkUserInactivity(): boolean {
-  const idleTime = powerMonitor.getSystemIdleTime();
-  return idleTime > INACTIVITY_THRESHOLD;
-}
+let inactivityThreshold = 5;
 
 export async function startMonitoring(mainWindow: BrowserWindow | null): Promise<void> {
   let wasPreviouslyIdle = false;
@@ -15,16 +14,25 @@ export async function startMonitoring(mainWindow: BrowserWindow | null): Promise
   while (true) {
     await new Promise((resolve) => setTimeout(resolve, CHECK_INTERVAL));
 
-    const isNowIdle = checkUserInactivity();
+    const currentSettings = getSettingsFromMemory();
+    if (currentSettings.inactivityToggle) {
+      inactivityThreshold = currentSettings.inactivityTimer * SEC_PER_MIN;
+      const isNowIdle = checkUserInactivity();
 
-    if (isNowIdle && !wasPreviouslyIdle) {
-      mainWindow!.webContents.send('user-inactive');
-      wasPreviouslyIdle = true;
-    }
+      if (isNowIdle && !wasPreviouslyIdle) {
+        mainWindow!.webContents.send('user-inactive');
+        wasPreviouslyIdle = true;
+      }
 
-    if (wasPreviouslyIdle && !isNowIdle) {
-      mainWindow!.webContents.send('user-active');
-      wasPreviouslyIdle = false;
+      if (wasPreviouslyIdle && !isNowIdle) {
+        mainWindow!.webContents.send('user-active');
+        wasPreviouslyIdle = false;
+      }
     }
   }
+}
+
+function checkUserInactivity(): boolean {
+  const idleTime = powerMonitor.getSystemIdleTime();
+  return idleTime > inactivityThreshold;
 }

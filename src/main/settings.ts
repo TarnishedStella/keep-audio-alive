@@ -5,11 +5,18 @@ import { ApplicationSettings } from '@common/types';
 
 const settingsPath = path.join(app.getPath('userData'), 'settings.json');
 
+let currentSettings: ApplicationSettings;
+
+export function getSettingsFromMemory(): ApplicationSettings {
+  return currentSettings;
+}
+
 export function loadSettings(): ApplicationSettings {
   try {
     if (fs.existsSync(settingsPath)) {
       const data = fs.readFileSync(settingsPath, 'utf-8');
-      return JSON.parse(data);
+      currentSettings = JSON.parse(data);
+      return currentSettings;
     }
     const defaultSettings: ApplicationSettings = {
       inactivityToggle: true,
@@ -27,6 +34,7 @@ export function loadSettings(): ApplicationSettings {
 
 export function saveSettings(settings: ApplicationSettings): void {
   console.log(settings);
+  currentSettings = settings;
   try {
     fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
   } catch (error) {
@@ -36,6 +44,7 @@ export function saveSettings(settings: ApplicationSettings): void {
 
 export function saveSettingsJson(settingsJson: string): void {
   console.log(settingsJson);
+  currentSettings = JSON.parse(settingsJson);
   try {
     fs.writeFileSync(settingsPath, settingsJson);
   } catch (error) {
@@ -45,10 +54,10 @@ export function saveSettingsJson(settingsJson: string): void {
 
 export function registerSettingsHandlers(): void {
   ipcMain.handle('load-settings', () => loadSettings());
-  ipcMain.handle('save-settings', (event, settingsData) => {
+  ipcMain.handle('save-settings', (_event, settingsData) => {
     saveSettings(settingsData);
   });
-  ipcMain.handle('save-settings-json', (event, settingsData) => {
+  ipcMain.handle('save-settings-json', (_event, settingsData) => {
     saveSettingsJson(settingsData);
   });
 }

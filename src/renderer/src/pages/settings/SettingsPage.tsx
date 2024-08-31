@@ -18,7 +18,7 @@ const idleTimes = [5, 10, 15, 30, 60]; // Idle detection times in minutes
 
 // interface Props {}
 
-const Settings: React.FunctionComponent = (): ReactElement => {
+const SettingsPage: React.FunctionComponent = (): ReactElement => {
   const navigate = useNavigate();
 
   const isIdleDetectionEnabled = useAppSelector(selectIsInactivityToggled);
@@ -120,4 +120,4 @@ const Settings: React.FunctionComponent = (): ReactElement => {
   );
 };
 
-export default Settings;
+export default SettingsPage;

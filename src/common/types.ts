@@ -1,6 +1,6 @@
 export interface ApplicationSettings {
   inactivityToggle: boolean;
-  inactivityTimer: number;
+  inactivityTimer: number; // stored in minutes
   rememberLastState: boolean;
   devicesState: Record<string, IPlaybackStatus>;
 }
