@@ -4,18 +4,27 @@ import '@radix-ui/themes/styles.css';
 import ReactDOM from 'react-dom/client';
 import { Theme } from '@radix-ui/themes';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { createRouter, RouterProvider } from '@tanstack/react-router';
+import { createMemoryHistory, createRouter, RouterProvider } from '@tanstack/react-router';
 import { Provider } from 'react-redux';
-import { Route } from './routes/__root';
-import { indexRoute, settingsRoute } from './routes/settings.lazy';
+
 import store from './store';
 import { AudioProvider } from './components/AudioContext';
+import { rootRoute } from './routes/root';
+import { indexRoute, settingsRoute } from './routes/page-routes';
 
-const routeTree = Route.addChildren([indexRoute, settingsRoute]);
+const memoryHistory = createMemoryHistory({
+  initialEntries: ['/'], // Pass your initial url
+});
+
+const routeTree = rootRoute.addChildren([indexRoute, settingsRoute]);
 
 const queryClient = new QueryClient();
 
-const router = createRouter({ routeTree });
+const router = createRouter({
+  routeTree,
+  defaultPreload: 'intent',
+  history: memoryHistory,
+});
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <Theme appearance="dark" accentColor="violet">
