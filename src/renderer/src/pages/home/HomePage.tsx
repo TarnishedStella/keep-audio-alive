@@ -29,6 +29,7 @@ import { GearIcon } from '@radix-ui/react-icons';
 import { MediaDeviceInfoCustom, PlaybackState } from '@common/types';
 import { setDeviceStates } from '@renderer/pages/settings/settingsSlice';
 import { showErrorToast } from '@renderer/common/ToastManager';
+import { Logger } from '@common/Logger';
 
 function HomePage(): ReactElement {
   const navigate = useNavigate();
@@ -50,6 +51,7 @@ function HomePage(): ReactElement {
     if (!isInitialized) {
       dispatch(setInitialized());
       if (isRememberLastState) {
+        Logger.info('Remembering last device state');
         Object.entries(rememberedDevices).forEach(([, status]) => {
           handleAudioDevice(status.deviceDetails, status.playbackState);
         });
@@ -60,6 +62,7 @@ function HomePage(): ReactElement {
   const startAudio = async (): Promise<void> => {
     if (selectedDevice) {
       if (isDeviceAlreadyActive(selectedDevice.deviceId)) {
+        Logger.warn('User attempted to add already added device:', selectedDevice.deviceId);
         showErrorToast('Device already active');
         return;
       }
@@ -106,7 +109,7 @@ function HomePage(): ReactElement {
 
   useEffect(() => {
     if (devicePlaybackStatuses) {
-      console.log(devicePlaybackStatuses);
+      Logger.debug(devicePlaybackStatuses);
       dispatch(setDeviceStates(devicePlaybackStatuses));
     }
   }, [devicePlaybackStatuses, dispatch]);
@@ -125,7 +128,7 @@ function HomePage(): ReactElement {
   };
 
   const pauseAudio = (activeAudioDevice: ActiveAudioDevice, userPaused: boolean): void => {
-    console.log(audioRefs);
+    Logger.debug(audioRefs);
 
     const audioElement = audioRefs[activeAudioDevice.mediaDeviceInfo.deviceId]?.current;
     audioElement!.pause();
@@ -154,7 +157,7 @@ function HomePage(): ReactElement {
   };
 
   function pauseActiveDevices(userPaused: boolean): void {
-    console.log('pausing devices');
+    Logger.info('pausing devices');
     activeAudioDevices.forEach((device) => {
       const { playbackState } = devicePlaybackStatuses[device.mediaDeviceInfo.deviceId];
       if (playbackState === PlaybackState.Playing) {
@@ -164,7 +167,7 @@ function HomePage(): ReactElement {
   }
 
   function resumeActiveDevices(): void {
-    console.log('resuming devices');
+    Logger.info('resuming devices');
     activeAudioDevices.forEach((device) => {
       const { playbackState } = devicePlaybackStatuses[device.mediaDeviceInfo.deviceId];
       if (playbackState === PlaybackState.IdlePaused) {
@@ -174,28 +177,28 @@ function HomePage(): ReactElement {
   }
 
   useIpcListener('user-inactive', () => {
-    console.log('User is inactive!');
+    Logger.info('User is inactive!');
     if (isInactivityToggled) {
       pauseActiveDevices(false);
     }
   });
 
   useIpcListener('user-active', () => {
-    console.log('User is active again!');
+    Logger.info('User is active again');
     if (isInactivityToggled) {
       resumeActiveDevices();
     }
   });
 
   useIpcListener('pause-all', () => {
-    console.log('pause-all');
+    Logger.info('handling pause-all');
     activeAudioDevices.forEach((device) => {
       pauseAudio(device, true);
     });
   });
 
   useIpcListener('resume-all', () => {
-    console.log('resume-all');
+    Logger.info('handling resume-all');
     activeAudioDevices.forEach((device) => {
       resumeAudio(device);
     });

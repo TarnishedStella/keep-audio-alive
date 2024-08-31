@@ -4,10 +4,16 @@ import { createMainWindow } from './windows';
 import { createTray, updateIsPlaying, updateTrayContextMenu } from './tray';
 import { registerSettingsHandlers } from './settings';
 import { startMonitoring } from './inactivity';
+import { setupLogging } from './logging';
+
+const log = require('electron-log');
 
 let mainWindow: BrowserWindow | null = null;
 let tray: Tray | null = null;
 let isQuitting = false;
+
+setupLogging();
+log.info('Starting application');
 
 app.whenReady().then(() => {
   electronApp.setAppUserModelId('com.electron');
@@ -42,6 +48,7 @@ app.whenReady().then(() => {
 
 app.on('before-quit', () => {
   isQuitting = true;
+  log.info('Quitting');
 });
 
 app.on('window-all-closed', (event) => {

@@ -2,13 +2,14 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ApplicationSettings } from '@common/types';
 import { showErrorToast } from '@renderer/common/ToastManager';
+import { Logger } from '@common/Logger';
 
 export const SETTINGS_SLICE_NAME = 'settings';
 
 // export interface ISettingsSlice extends ApplicationSettings {}
 
 const loadedSettings = await window.api.getSettings();
-console.log(loadedSettings);
+Logger.debug(loadedSettings);
 
 export const settingsSlice = createSlice({
   name: SETTINGS_SLICE_NAME,
@@ -53,12 +54,12 @@ function saveCurrentState(state): void {
       devicesState: state.devicesState,
     } as ApplicationSettings;
     const settingsJson = JSON.stringify(tmp, null, 2);
-    console.log(settingsJson);
+    Logger.debug(settingsJson);
 
     window.api.saveSettingsJson(settingsJson);
   } catch (e) {
     if (e instanceof Error) {
-      console.log(e);
+      Logger.error(e);
       showErrorToast(`Failed to save settings: ${e.message}`);
     }
   }

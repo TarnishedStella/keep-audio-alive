@@ -2,6 +2,7 @@ import { app, ipcMain } from 'electron';
 import fs from 'fs';
 import path from 'path';
 import { ApplicationSettings } from '@common/types';
+import { Logger } from '../common/Logger';
 
 const settingsPath = path.join(app.getPath('userData'), 'settings.json');
 
@@ -27,28 +28,28 @@ export function loadSettings(): ApplicationSettings {
     saveSettings(defaultSettings);
     return defaultSettings;
   } catch (error) {
-    console.error('Failed to load settings:', error);
+    Logger.error('Failed to load settings:', error);
     throw error;
   }
 }
 
 export function saveSettings(settings: ApplicationSettings): void {
-  console.log(settings);
+  Logger.debug(settings);
   currentSettings = settings;
   try {
     fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
   } catch (error) {
-    console.error('Failed to save settings:', error);
+    Logger.error('Failed to save settings:', error);
   }
 }
 
 export function saveSettingsJson(settingsJson: string): void {
-  console.log(settingsJson);
+  Logger.debug(settingsJson);
   currentSettings = JSON.parse(settingsJson);
   try {
     fs.writeFileSync(settingsPath, settingsJson);
   } catch (error) {
-    console.error('Failed to save settings:', error);
+    Logger.error('Failed to save settings:', error);
   }
 }
 

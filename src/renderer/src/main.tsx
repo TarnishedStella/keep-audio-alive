@@ -11,6 +11,7 @@ import store from './store';
 import { AudioProvider } from './components/AudioContext';
 import { rootRoute } from './routes/root';
 import { indexRoute, settingsRoute } from './routes/page-routes';
+import { useElectronLog } from './hooks/useElectronLogger';
 
 const memoryHistory = createMemoryHistory({
   initialEntries: ['/'], // Pass your initial url
@@ -25,6 +26,8 @@ const router = createRouter({
   defaultPreload: 'intent',
   history: memoryHistory,
 });
+
+useElectronLog();
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <Theme appearance="dark" accentColor="violet">

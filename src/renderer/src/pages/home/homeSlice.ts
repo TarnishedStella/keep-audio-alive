@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ActiveAudioDevice } from '@renderer/types';
 import { IPlaybackStatus, PlaybackState } from '@common/types';
+import { Logger } from '@common/Logger';
 
 export const HOME_SLICE_NAME = 'home';
 
@@ -32,10 +33,12 @@ export const homeSlice = createSlice({
       state.audioManager.selectedDevice = action.payload;
     },
     addActiveAudioDevice: (state, action: PayloadAction<ActiveAudioDevice>) => {
+      Logger.info(`adding active audio device`, action.payload.mediaDeviceInfo);
       state.audioManager.activeAudioDevices.push(action.payload);
     },
     removeActiveAudioDevice: (state, action: PayloadAction<ActiveAudioDevice>) => {
-      console.log(action.payload);
+      Logger.info(`removing active audio device: ${action.payload.mediaDeviceInfo}`);
+      Logger.debug(action.payload);
 
       state.audioManager.activeAudioDevices = state.audioManager.activeAudioDevices.filter(
         (device) => device.mediaDeviceInfo.deviceId !== action.payload.mediaDeviceInfo.deviceId,
@@ -44,6 +47,9 @@ export const homeSlice = createSlice({
       delete state.audioManager.devicePlaybackStatuses[action.payload.mediaDeviceInfo.deviceId];
     },
     updatePlaybackStatus: (state, action: PayloadAction<IPlaybackStatus>) => {
+      Logger.info(
+        `updating playback status: ${action.payload.deviceDetails.label} -- ${action.payload.playbackState}`,
+      );
       state.audioManager.devicePlaybackStatuses[action.payload.deviceDetails.deviceId] =
         action.payload;
 
@@ -55,18 +61,17 @@ export const homeSlice = createSlice({
           return playbackStatus?.playbackState === PlaybackState.Playing;
         });
 
-        console.log(isPlaying);
         if (isPlaying) {
-          console.log('isPlaying');
+          Logger.debug('application is currently playing audio');
           window.api.playingAudio();
         } else {
-          console.log('isNotPlaying');
+          Logger.debug('application is not currently playing any audio');
           window.api.notPlayingAudio();
         }
       }
     },
     setInitialized: (state) => {
-      console.log('initialized!');
+      Logger.debug('initialized application');
       state.audioManager.initialized = true;
     },
   },

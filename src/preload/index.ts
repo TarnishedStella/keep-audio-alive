@@ -1,6 +1,7 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import { electronAPI } from '@electron-toolkit/preload';
 import { ApplicationSettings } from '@common/types';
+import { Logger } from '../common/Logger';
 
 // Custom APIs for renderer
 const api = {
@@ -26,7 +27,7 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('electron', electronAPI);
     contextBridge.exposeInMainWorld('api', api);
   } catch (error) {
-    console.error(error);
+    Logger.error(error);
   }
 } else {
   // @ts-ignore (define in dts)
