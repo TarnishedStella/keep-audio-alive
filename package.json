@@ -1,9 +1,9 @@
 {
   "name": "keep-audio-alive",
   "version": "1.0.0",
-  "description": "An Electron application with React and TypeScript",
+  "description": "A simple electron application to keep audio devices alive and prevent the dreaded audio pops",
   "main": "./out/main/index.js",
-  "author": "example.com",
+  "author": "",
   "homepage": "https://electron-vite.org",
   "packageManager": "yarn@4.4.0",
   "scripts": {
