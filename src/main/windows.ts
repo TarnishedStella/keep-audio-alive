@@ -1,7 +1,7 @@
 import { BrowserWindow, shell } from 'electron';
 import { join } from 'path';
 import { is } from '@electron-toolkit/utils';
-import icon from '../../resources/favicon.ico?asset';
+import icon from '../../resources/icon.ico?asset';
 
 export function createMainWindow(): BrowserWindow {
   const mainWindow = new BrowserWindow({
