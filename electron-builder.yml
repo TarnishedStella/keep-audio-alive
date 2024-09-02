@@ -1,4 +1,4 @@
-appId: com.electron.keepaudioalive
+appId: com.tarnishedstella.keepaudioalive
 productName: Keep Audio Alive
 directories:
   buildResources: build
@@ -33,11 +33,13 @@ linux:
     - AppImage
     - snap
     - deb
-  maintainer: electronjs.org
+  maintainer: tarnishedstella
   category: Utility
 appImage:
   artifactName: ${name}-${version}.${ext}
 npmRebuild: false
 publish:
-  provider: generic
-  url: https://example.com/auto-updates
+  provider: github
+  owner: "tarnishedstella"
+  repo: "keep-audio-alive"
+
