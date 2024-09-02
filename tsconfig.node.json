@@ -2,6 +2,7 @@
   "extends": "@electron-toolkit/tsconfig/tsconfig.node.json",
   "include": [
     "electron.vite.config.*",
+    "dev-app-update.yml",
     "src/main/**/*",
     "src/preload/**/*",
     "src/common/**/*",

@@ -1,6 +1,6 @@
 {
   "name": "keep-audio-alive",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A simple electron application to keep audio devices alive and prevent the dreaded audio pops",
   "main": "./out/main/index.js",
   "author": "",
@@ -20,7 +20,8 @@
     "build:unpack": "yarn run build && electron-builder --dir",
     "build:win": "yarn build && electron-builder --win",
     "build:mac": "electron-vite build && electron-builder --mac",
-    "build:linux": "electron-vite build && electron-builder --linux"
+    "build:linux": "electron-vite build && electron-builder --linux",
+    "release": "yarn electron-builder"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
@@ -31,6 +32,7 @@
     "@tanstack/react-query": "^5.51.23",
     "@tanstack/react-router": "^1.48.1",
     "electron-log": "^5.1.7",
+    "electron-updater": "6.2.1",
     "howler": "^2.2.4",
     "keep-audio-alive": "file:",
     "react-hot-toast": "^2.4.1",
@@ -58,6 +60,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "typescript": "^5.5.2",
-    "vite": "^5.3.1"
+    "vite": "^5.3.1",
+    "vite-plugin-static-copy": "^1.0.6"
   }
 }
