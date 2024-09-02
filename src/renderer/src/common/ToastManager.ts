@@ -10,12 +10,13 @@ export function showErrorToast(message: string): void {
   });
 }
 
-export function showSuccessToast(message: string): void {
+export function showSuccessToast(message: string, duration?: number): void {
   toast.success(message, {
     style: {
       background: 'var(--color-background-mute)',
       color: 'var(--color-text)',
     },
     position: 'bottom-center',
+    duration: duration,
   });
 }

@@ -1,4 +1,5 @@
 @import './base.css';
+@import '../components/Version.module.css';
 
 body {
   display: flex;
@@ -125,3 +126,4 @@ body {
   justify-content: end;
   align-items: center;
 }
+

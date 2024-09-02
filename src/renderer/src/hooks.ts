@@ -13,7 +13,7 @@ export const useAppSelector = useSelector.withTypes<RootState>();
  */
 const useIpcListener = (
   channel: string,
-  listener: (event: unknown, ...args: unknown[]) => void,
+  listener: (event: unknown, ...args: never[]) => void,
 ): void => {
   const savedHandler = useRef(listener);
 
@@ -22,7 +22,7 @@ const useIpcListener = (
   }, [listener]);
 
   useEffect(() => {
-    const eventHandler = (event: unknown, ...args: unknown[]): void =>
+    const eventHandler = (event: unknown, ...args: never[]): void =>
       savedHandler.current(event, ...args);
 
     // Access the electron API exposed via contextBridge

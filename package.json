@@ -1,10 +1,10 @@
 {
   "name": "keep-audio-alive",
-  "version": "0.1.0",
-  "description": "A simple electron application to keep audio devices alive and prevent the dreaded audio pops",
+  "version": "1.0.1",
+  "description": "A simple electron application to keep audio devices alive and prevent the annoying audio pops",
   "main": "./out/main/index.js",
-  "author": "",
-  "homepage": "https://electron-vite.org",
+  "author": "Estella",
+  "homepage": "https://github.com/TarnishedStella/keep-audio-alive",
   "packageManager": "yarn@4.4.0",
   "scripts": {
     "format": "prettier --write .",
@@ -32,7 +32,7 @@
     "@tanstack/react-query": "^5.51.23",
     "@tanstack/react-router": "^1.48.1",
     "electron-log": "^5.1.7",
-    "electron-updater": "6.2.1",
+    "electron-updater": "6.3.4",
     "howler": "^2.2.4",
     "keep-audio-alive": "file:",
     "react-hot-toast": "^2.4.1",
