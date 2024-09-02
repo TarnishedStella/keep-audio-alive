@@ -2097,27 +2097,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:5.53.2":
-  version: 5.53.2
-  resolution: "@tanstack/query-core@npm:5.53.2"
-  checksum: 10c0/572062fa180cd258415df3b47ae4e4ce0e96e0ad4ef9cf158e2cde3a1d4884e587c0eaf2216a6dba8aff3d1655adbcce5a8b35b29aa1983adad4f5b31db3f566
+"@tanstack/query-core@npm:5.53.3":
+  version: 5.53.3
+  resolution: "@tanstack/query-core@npm:5.53.3"
+  checksum: 10c0/bf1cee5aa69bca4e3caada664d3cf699031d513e56b206e853fa34ab867482018a1cf8caddcf175bde4c4eedc03378cb628f1b0d5338b1cffcd0c0b56b2ef339
   languageName: node
   linkType: hard
 
 "@tanstack/react-query@npm:^5.51.23":
-  version: 5.53.2
-  resolution: "@tanstack/react-query@npm:5.53.2"
+  version: 5.53.3
+  resolution: "@tanstack/react-query@npm:5.53.3"
   dependencies:
-    "@tanstack/query-core": "npm:5.53.2"
+    "@tanstack/query-core": "npm:5.53.3"
   peerDependencies:
     react: ^18 || ^19
-  checksum: 10c0/d18285ed43aad52ee5892bb9af6daf82eb7b005570b3e8eac23e9b4f22a53cf00dbc47b6f2fb4156b5625a452c03c016b24de06db47f3b32200c19aecaec737c
+  checksum: 10c0/c14e8e2cfe1c46437c513dcfcdfcac211368a29967d0256fa1320484861f14ca5c34dd117a7cd850732759fcc9faa7454b042d812c027fda8e128113b2616dcb
   languageName: node
   linkType: hard
 
 "@tanstack/react-router@npm:^1.48.1":
-  version: 1.52.3
-  resolution: "@tanstack/react-router@npm:1.52.3"
+  version: 1.52.4
+  resolution: "@tanstack/react-router@npm:1.52.4"
   dependencies:
     "@tanstack/history": "npm:1.51.7"
     "@tanstack/react-store": "npm:^0.5.5"
@@ -2126,7 +2126,7 @@ __metadata:
   peerDependencies:
     react: ">=18"
     react-dom: ">=18"
-  checksum: 10c0/23e30e91460bb72dd30233008ed8f4d4b30ac96470e2a5faab12539b14816ddffb66cc01ae371f24196efb22d3c598956eff9976a144376b7f19081949c2e890
+  checksum: 10c0/326eb9d2c40ad7f6c83ec4a27fce458c879df2664c26add9166047209ac9b78177a203417087c4fe79af4e918c90c8bca70501589ceb124f6428227197d795ab
   languageName: node
   linkType: hard
 
@@ -2144,16 +2144,16 @@ __metadata:
   linkType: hard
 
 "@tanstack/router-devtools@npm:^1.48.1":
-  version: 1.52.3
-  resolution: "@tanstack/router-devtools@npm:1.52.3"
+  version: 1.52.4
+  resolution: "@tanstack/router-devtools@npm:1.52.4"
   dependencies:
     clsx: "npm:^2.1.1"
     goober: "npm:^2.1.14"
   peerDependencies:
-    "@tanstack/react-router": ^1.52.3
+    "@tanstack/react-router": ^1.52.4
     react: ">=18"
     react-dom: ">=18"
-  checksum: 10c0/6468bff55c5f2d0d477356a53dc3ea52b74fea042794c9e87a088e724ea1daa9a618d4103abcfc4ca4891e22aca9cc669c55273d9fa201ca627e172465d74b68
+  checksum: 10c0/57d6786975f940067bcec4c2a277d52255c5d6f6cd2386cc3cd3de602fef8238f4fa94a4c0c03bb8fee62566a96c780b04adfbfb91741b15d98eb118af14e97f
   languageName: node
   linkType: hard
 
@@ -3039,6 +3039,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"builder-util-runtime@npm:9.2.5":
+  version: 9.2.5
+  resolution: "builder-util-runtime@npm:9.2.5"
+  dependencies:
+    debug: "npm:^4.3.4"
+    sax: "npm:^1.2.4"
+  checksum: 10c0/1791a2543355bf9656b3321d20e2a23b1e61c4a7172a824767379da6321f8e6e8a33347238c64c9ac81168b41ebf5c66ce7a69c3c35b1f5e230072d9fe36c605
+  languageName: node
+  linkType: hard
+
 "builder-util@npm:24.13.1":
   version: 24.13.1
   resolution: "builder-util@npm:24.13.1"
@@ -3631,19 +3641,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-updater@npm:6.2.1":
-  version: 6.2.1
-  resolution: "electron-updater@npm:6.2.1"
+"electron-updater@npm:6.3.4":
+  version: 6.3.4
+  resolution: "electron-updater@npm:6.3.4"
   dependencies:
-    builder-util-runtime: "npm:9.2.4"
+    builder-util-runtime: "npm:9.2.5"
     fs-extra: "npm:^10.1.0"
     js-yaml: "npm:^4.1.0"
     lazy-val: "npm:^1.0.5"
     lodash.escaperegexp: "npm:^4.1.2"
     lodash.isequal: "npm:^4.5.0"
-    semver: "npm:^7.3.8"
+    semver: "npm:^7.6.3"
     tiny-typed-emitter: "npm:^2.1.0"
-  checksum: 10c0/b376e13bf2b4675ca853c4164a4caf9454d0d41e797c0f8fd011d66693d4eb5ece020953f3d06c0a63d9d5077a9ae9e8447f26c602da317edb1521c4bd99e2f8
+  checksum: 10c0/ca67160d251c16f896672e15b81dcfbf759a6a8350dc919666d426207e60038d20b75c5351705af3153ae686621d2856df2ce68ed538e0aad397ef90723d0da1
   languageName: node
   linkType: hard
 
@@ -5343,7 +5353,7 @@ __metadata:
     electron: "npm:^31.0.2"
     electron-builder: "npm:^24.13.3"
     electron-log: "npm:^5.1.7"
-    electron-updater: "npm:6.2.1"
+    electron-updater: "npm:6.3.4"
     electron-vite: "npm:^2.3.0"
     eslint: "npm:^8.57.0"
     eslint-plugin-react: "npm:^7.34.3"
@@ -6004,13 +6014,13 @@ __metadata:
   linkType: hard
 
 "postcss@npm:^8.4.41":
-  version: 8.4.43
-  resolution: "postcss@npm:8.4.43"
+  version: 8.4.44
+  resolution: "postcss@npm:8.4.44"
   dependencies:
     nanoid: "npm:^3.3.7"
     picocolors: "npm:^1.0.1"
     source-map-js: "npm:^1.2.0"
-  checksum: 10c0/7cc9c6393ca00fcdca6fef8d119218df9357389b9fed30b6d4b463fc0e85159595a877f4ac0a2a565ea4c447cab1f424e527e68d8b7d40b8c94a6684663d45c5
+  checksum: 10c0/53c33338261a3d4f4198f8893e9dfe8b828d8d9186142ee85f02d228f04245c5bbe31239411a357a556ad20ed96f28db24d0921d63edc428fdc9133289371a1d
   languageName: node
   linkType: hard
 
@@ -6550,7 +6560,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:^7.3.2, semver@npm:^7.3.5, semver@npm:^7.3.8, semver@npm:^7.5.3, semver@npm:^7.6.0":
+"semver@npm:^7.3.2, semver@npm:^7.3.5, semver@npm:^7.3.8, semver@npm:^7.5.3, semver@npm:^7.6.0, semver@npm:^7.6.3":
   version: 7.6.3
   resolution: "semver@npm:7.6.3"
   bin:

@@ -2,7 +2,8 @@ import { app, ipcMain } from 'electron';
 import fs from 'fs';
 import path from 'path';
 import { ApplicationSettings } from '@common/types';
-import { Logger } from '../common/Logger';
+import { Logger } from '../../common/Logger';
+import { Channels } from '../../common/ipc';
 
 const settingsPath = path.join(app.getPath('userData'), 'settings.json');
 
@@ -54,11 +55,11 @@ export function saveSettingsJson(settingsJson: string): void {
 }
 
 export function registerSettingsHandlers(): void {
-  ipcMain.handle('load-settings', () => loadSettings());
-  ipcMain.handle('save-settings', (_event, settingsData) => {
+  ipcMain.handle(Channels.LOAD_SETTINGS, () => loadSettings());
+  ipcMain.handle(Channels.SAVE_SETTINGS, (_event, settingsData) => {
     saveSettings(settingsData);
   });
-  ipcMain.handle('save-settings-json', (_event, settingsData) => {
+  ipcMain.handle(Channels.SAVE_SETTINGS_JSON, (_event, settingsData) => {
     saveSettingsJson(settingsData);
   });
 }

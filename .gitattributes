@@ -3,12 +3,14 @@
 /.yarn/plugins/**/*  binary
 /.pnp.*              binary linguist-generated
 # Set the default behavior, in case people don't have core.autocrlf set.
-* text=auto
+* text=LF
 
 # Explicitly declare text files you want to always be normalized and converted
 # to native line endings on checkout.
 *.c text
 *.h text
+*.tsx eol=LF
+*.ts eol=LF
 
 # Declare files that will always have CRLF line endings on checkout.
 *.sln text eol=crlf
