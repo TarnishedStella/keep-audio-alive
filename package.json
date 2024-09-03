@@ -1,6 +1,6 @@
 {
   "name": "keep-audio-alive",
-  "version": "1.0.1-beta",
+  "version": "1.0.1",
   "description": "A simple electron application to keep audio devices alive and prevent the annoying audio pops",
   "main": "./out/main/index.js",
   "author": "Estella",

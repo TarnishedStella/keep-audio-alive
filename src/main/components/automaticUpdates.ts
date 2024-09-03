@@ -10,6 +10,7 @@ export function ConfigureAutomaticUpdates(window: BrowserWindow, checkIntervalMs
   if (process.env.NODE_ENV === 'development') {
     autoUpdater.forceDevUpdateConfig = true;
     autoUpdater.updateConfigPath = join(__dirname, 'dev-app-update.yml');
+    autoUpdater.channel = 'beta';
   }
   autoUpdater.autoDownload = false;
   autoUpdater.autoInstallOnAppQuit = true;
