@@ -25,6 +25,14 @@ Download and install the latest version from the [Releases Page](https://github.
 
 Keep Audio Alive will automatically check for updates upon startup and every 12 hours. You will be notified if an update is available.
 
+## Screenshots
+
+### Home Screen
+![screenshot](/docs/images/Application%20Screenshot%20-%20Home.png)
+
+### Settings
+![screenshot](/docs/images/Application%20Screenshot%20-%20Settings.png)
+
 ## Development
 
 ### Recommended IDE Setup
