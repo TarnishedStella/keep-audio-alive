@@ -71,6 +71,7 @@ function saveCurrentState(state): void {
       devicesState: state.devicesState,
       launchOnStartup: state.launchOnStartup,
       launchHidden: state.launchHidden,
+      lastSeenVersion: state.lastSeenVersion,
     } as ApplicationSettings;
     const settingsJson = JSON.stringify(tmp, null, 2);
     Logger.debug(settingsJson);

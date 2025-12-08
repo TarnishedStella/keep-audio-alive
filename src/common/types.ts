@@ -5,6 +5,7 @@ export interface ApplicationSettings {
   devicesState: Record<string, IPlaybackStatus>;
   launchOnStartup: boolean;
   launchHidden: boolean;
+  lastSeenVersion?: string;
 }
 
 export interface MediaDeviceInfoCustom {

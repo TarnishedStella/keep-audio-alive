@@ -16,8 +16,6 @@ const api = {
   notPlayingAudio: (): Promise<void> => ipcRenderer.invoke(Channels.NOT_PLAYING_AUDIO),
   getAutoLaunchEnabled: (): Promise<boolean> =>
     ipcRenderer.invoke(Channels.GET_AUTO_LAUNCH_ENABLED),
-  getLoginItemSettings: (): Promise<Electron.LoginItemSettings> =>
-    ipcRenderer.invoke(Channels.GET_LOGIN_ITEM_SETTINGS),
   on: (channel: string, listener: (...args: unknown[]) => void) => {
     ipcRenderer.on(channel, listener);
     return (): Electron.IpcRenderer => ipcRenderer.removeListener(channel, listener);

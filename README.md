@@ -9,6 +9,7 @@ This is yet another application to prevent your audio devices from going to slee
 - **State Persistence**: Remembers the previous application state for a seamless experience.
 - **System Tray Control**: Quickly pause or resume the application from the system tray.
 - **Automatic Updates**: Stay up-to-date with the latest features and improvements.
+- **Launch on Startup**: Ability to launch automatically when your system starts, with the choice to start hidden in the system tray.
 
 The application is built using Electron and leverages the HTML5 audio player to play a silent audio file on selected devices. This approach prevents devices from powering down without generating any noticeable noise or static. Each active device is managed independently, ensuring fine-grained control.
 
@@ -20,6 +21,10 @@ Long answer: To sharpen my skills and get better using web development framework
 ## Installation
 
 Download and install the latest version from the [Releases Page](https://github.com/TarnishedStella/keep-audio-alive/releases/latest).
+
+### Platform Support
+
+This application was primarily developed and tested on **Windows**. However, since it's built with Electron, it should theoretically work on **Linux** and **macOS** as well. Please note that Linux and macOS builds are currently **untested and unverified**. If you encounter any issues on these platforms, feel free to open an issue or submit a pull request with fixes.
 
 ## Automatic Updates
 
