@@ -53,12 +53,14 @@ const WhatsNewDialog: React.FC<WhatsNewDialogProps> = ({ open, version, onClose 
           </Flex>
         </Dialog.Title>
 
+        <Dialog.Description>Here&apos;s what&apos;s new in this version:</Dialog.Description>
+
         <ScrollArea style={{ maxHeight: 400 }}>
-          <Flex direction="column" gap="3" style={{ paddingRight: '1rem' }}>
+          <Flex direction="column" gap="3" style={{ paddingRight: '1rem', marginTop: '1rem' }}>
             {changelog.features && changelog.features.length > 0 && (
               <Flex direction="column" gap="2">
                 <Text size="3" weight="bold">
-                  ✨ New Features
+                  ✨ Features
                 </Text>
                 <ul style={{ margin: 0, paddingLeft: '1.5rem', listStyleType: 'disc' }}>
                   {changelog.features.map(renderChangelogItem)}
