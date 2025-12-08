@@ -34,7 +34,9 @@ const renderChangelogItem = (item: ChangelogItemOrString, index: number): React.
 };
 
 const WhatsNewDialog: React.FC<WhatsNewDialogProps> = ({ open, version, onClose }) => {
-  const changelog = getChangelogForVersion(version);
+  // Normalize version to remove beta/alpha suffixes (e.g., "1.1.0-beta.0" -> "1.1.0")
+  const normalizedVersion = version.split('-')[0];
+  const changelog = getChangelogForVersion(normalizedVersion);
 
   if (!changelog) {
     return null;
