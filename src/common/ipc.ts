@@ -14,6 +14,9 @@ export enum Channels {
   // Audio State (for the tray)
   PLAYING_AUDIO = 'playing-audio',
   NOT_PLAYING_AUDIO = 'not-playing-audio',
+
+  // Auto-launch status
+  GET_AUTO_LAUNCH_ENABLED = 'get-auto-launch-enabled',
 }
 
 /**

@@ -1,27 +1,20 @@
 import { app } from 'electron';
 import AutoLaunch from 'auto-launch';
-import { Logger } from '../../common/Logger';
 
-let autoLauncher: AutoLaunch | null = null;
-let currentHiddenSetting = true; // Track the current hidden setting
+const log = require('electron-log');
 
 /**
- * Gets or creates the AutoLaunch instance with the specified configuration.
+ * Creates an AutoLaunch instance with the specified configuration.
  *
  * @param isHidden - Whether the app should launch hidden (minimized to tray)
  * @returns AutoLaunch instance
  */
-function getAutoLauncher(isHidden: boolean): AutoLaunch {
-  // Recreate the instance if the hidden setting changed
-  if (!autoLauncher || currentHiddenSetting !== isHidden) {
-    autoLauncher = new AutoLaunch({
-      name: 'Keep Audio Alive',
-      path: app.getPath('exe'),
-      isHidden: isHidden,
-    });
-    currentHiddenSetting = isHidden;
-  }
-  return autoLauncher;
+function createAutoLauncher(isHidden: boolean): AutoLaunch {
+  return new AutoLaunch({
+    name: 'Keep Audio Alive',
+    path: app.getPath('exe'),
+    isHidden: isHidden,
+  });
 }
 
 /**
@@ -31,25 +24,25 @@ function getAutoLauncher(isHidden: boolean): AutoLaunch {
  * @param enabled - Whether the app should launch on system startup
  * @param isHidden - Whether the app should launch hidden (minimized to tray)
  */
-export async function setAutoLaunch(enabled: boolean, isHidden = true): Promise<void> {
+export async function setAutoLaunch(enabled: boolean, isHidden: boolean): Promise<void> {
   try {
-    const launcher = getAutoLauncher(isHidden);
-    const isEnabled = await launcher.isEnabled();
+    log.debug(`setAutoLaunch called with enabled=${enabled}, isHidden=${isHidden}`);
+    const autoLauncher = createAutoLauncher(isHidden);
+    const isEnabled = await autoLauncher.isEnabled();
 
-    if (enabled && !isEnabled) {
-      await launcher.enable();
-      Logger.info(`Auto-launch enabled (hidden: ${isHidden})`);
-    } else if (!enabled && isEnabled) {
-      await launcher.disable();
-      Logger.info('Auto-launch disabled');
-    } else if (enabled && isEnabled) {
-      // Re-enable to update the hidden setting if it changed
-      await launcher.disable();
-      await launcher.enable();
-      Logger.info(`Auto-launch updated (hidden: ${isHidden})`);
+    if (enabled) {
+      // Always disable first to ensure clean state with updated settings
+      if (isEnabled) {
+        await autoLauncher.disable();
+      }
+      await autoLauncher.enable();
+      log.info(`Auto-launch enabled (hidden: ${isHidden})`);
+    } else if (isEnabled) {
+      await autoLauncher.disable();
+      log.info('Auto-launch disabled');
     }
   } catch (error) {
-    Logger.error('Failed to set auto-launch:', error);
+    log.error('Failed to set auto-launch:', error);
   }
 }
 
@@ -60,10 +53,12 @@ export async function setAutoLaunch(enabled: boolean, isHidden = true): Promise<
  */
 export async function getAutoLaunchStatus(): Promise<boolean> {
   try {
-    const launcher = getAutoLauncher(currentHiddenSetting);
+    log.debug('getAutoLaunchStatus called');
+    // Hidden setting doesn't affect status check, use default
+    const launcher = createAutoLauncher(true);
     return await launcher.isEnabled();
   } catch (error) {
-    Logger.error('Failed to get auto-launch status:', error);
+    log.error('Failed to get auto-launch status:', error);
     return false;
   }
 }

@@ -9,7 +9,14 @@ export const SETTINGS_SLICE_NAME = 'settings';
 // export interface ISettingsSlice extends ApplicationSettings {}
 
 const loadedSettings = await window.api.getSettings();
-Logger.debug(loadedSettings);
+
+// Query actual system state to display in UI
+// Note: During app startup, the main process restores auto-launch before this runs
+const actualAutoLaunchEnabled = await window.api.getAutoLaunchEnabled();
+Logger.debug(`Auto-launch enabled status from system: ${actualAutoLaunchEnabled}`);
+loadedSettings.launchOnStartup = actualAutoLaunchEnabled;
+
+Logger.debug('loadedSettingsFile', loadedSettings);
 
 export const settingsSlice = createSlice({
   name: SETTINGS_SLICE_NAME,

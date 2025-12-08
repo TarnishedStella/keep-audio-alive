@@ -2,16 +2,48 @@ import { app, ipcMain } from 'electron';
 import fs from 'fs';
 import path from 'path';
 import { ApplicationSettings } from '@common/types';
-import { Logger } from '../../common/Logger';
 import { Channels } from '../../common/ipc';
 import { setAutoLaunch } from './autoLaunch';
+
+const log = require('electron-log');
 
 const settingsPath = path.join(app.getPath('userData'), 'settings.json');
 
 let currentSettings: ApplicationSettings;
 
+/**
+ * Updates auto-launch settings if they have changed.
+ */
+function updateAutoLaunchIfChanged(newSettings: ApplicationSettings): void {
+  if (
+    currentSettings &&
+    (currentSettings.launchOnStartup !== newSettings.launchOnStartup ||
+      currentSettings.launchHidden !== newSettings.launchHidden)
+  ) {
+    setAutoLaunch(newSettings.launchOnStartup, newSettings.launchHidden).catch((err) =>
+      log.error('Failed to update auto-launch setting:', err),
+    );
+  }
+}
+
 export function getSettingsFromMemory(): ApplicationSettings {
   return currentSettings;
+}
+
+/**
+ * Initializes auto-launch settings from saved preferences.
+ * Call this on app startup to restore auto-launch after updates/reinstalls.
+ */
+export async function initializeAutoLaunch(): Promise<void> {
+  try {
+    const settings = loadSettings();
+    if (settings.launchOnStartup) {
+      log.info('Restoring auto-launch setting from preferences');
+      await setAutoLaunch(true, settings.launchHidden);
+    }
+  } catch (error) {
+    log.error('Failed to initialize auto-launch:', error);
+  }
 }
 
 export function loadSettings(): ApplicationSettings {
@@ -32,53 +64,31 @@ export function loadSettings(): ApplicationSettings {
     saveSettings(defaultSettings);
     return defaultSettings;
   } catch (error) {
-    Logger.error('Failed to load settings:', error);
+    log.error('Failed to load settings:', error);
     throw error;
   }
 }
 
 export function saveSettings(settings: ApplicationSettings): void {
-  Logger.debug(settings);
-
-  // Apply auto-launch setting if it changed
-  if (
-    currentSettings &&
-    (currentSettings.launchOnStartup !== settings.launchOnStartup ||
-      currentSettings.launchHidden !== settings.launchHidden)
-  ) {
-    setAutoLaunch(settings.launchOnStartup, settings.launchHidden).catch((err) =>
-      Logger.error('Failed to update auto-launch setting:', err),
-    );
-  }
-
+  log.debug('saveSettings', settings);
+  updateAutoLaunchIfChanged(settings);
   currentSettings = settings;
   try {
     fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
   } catch (error) {
-    Logger.error('Failed to save settings:', error);
+    log.error('Failed to save settings:', error);
   }
 }
 
 export function saveSettingsJson(settingsJson: string): void {
-  Logger.debug(settingsJson);
+  log.debug('saveSettingsJson', settingsJson);
   const newSettings = JSON.parse(settingsJson);
-
-  // Apply auto-launch setting if it changed
-  if (
-    currentSettings &&
-    (currentSettings.launchOnStartup !== newSettings.launchOnStartup ||
-      currentSettings.launchHidden !== newSettings.launchHidden)
-  ) {
-    setAutoLaunch(newSettings.launchOnStartup, newSettings.launchHidden).catch((err) =>
-      Logger.error('Failed to update auto-launch setting:', err),
-    );
-  }
-
+  updateAutoLaunchIfChanged(newSettings);
   currentSettings = newSettings;
   try {
     fs.writeFileSync(settingsPath, settingsJson);
   } catch (error) {
-    Logger.error('Failed to save settings:', error);
+    log.error('Failed to save settings:', error);
   }
 }
 
