@@ -21,7 +21,17 @@ export function ConfigureAutomaticUpdates(window: BrowserWindow, checkIntervalMs
 
   RegisterIpcEvents(window);
 
-  autoUpdater.checkForUpdatesAndNotify();
+  // Wait for renderer to be ready before checking for updates
+  // This prevents the race condition where update-available fires before React mounts
+  window.webContents.once('did-finish-load', () => {
+    log.info('Renderer loaded, checking for updates...');
+    // Additional delay to ensure React components are mounted
+    setTimeout(() => {
+      autoUpdater.checkForUpdatesAndNotify();
+    }, 2000);
+  });
+
+  // Periodic checks
   setInterval(() => {
     autoUpdater.checkForUpdatesAndNotify();
   }, checkIntervalMs);

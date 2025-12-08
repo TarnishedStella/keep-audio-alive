@@ -13,19 +13,7 @@ export interface ChangelogEntry {
 }
 
 export const changelog: ChangelogEntry[] = [
-  {
-    version: '1.1.0',
-    features: [
-      {
-        text: 'Auto Launch on Startup:',
-        subItems: [
-          'You can now set the app to launch automatically when you start your computer. No more forgetting to start it!',
-          'If enabled, the app can be set to launch straight to the system tray.',
-        ],
-      },
-    ],
-  },
-  // Add new versions here as you release them
+  // Add new versions at the top
   // {
   //   version: '1.2.0',
   //   features: [
@@ -38,6 +26,28 @@ export const changelog: ChangelogEntry[] = [
   //   improvements: ['Improvement description'],
   //   bugFixes: ['Bug fix description'],
   // },
+  {
+    version: '1.1.0',
+    features: [
+      {
+        text: 'Auto Launch on Startup',
+        subItems: [
+          'Toggle to enable/disable launching the app when the system starts. No more forgetting to start it!',
+          'Option to launch hidden directly to the system tray',
+        ],
+      },
+      {
+        text: "What's New Dialog",
+        subItems: [
+          'One-time dialog showing release notes after updates.',
+          "You're looking at it right now :3",
+        ],
+      },
+    ],
+    bugFixes: [
+      'Addressed a potential race condition that could cause the UI to miss an update notification',
+    ],
+  },
 ];
 
 /**
