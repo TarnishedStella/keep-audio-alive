@@ -19,6 +19,12 @@ let isQuitting = false;
 setupLogging();
 log.info('Starting application');
 
+// Check if launched with --hidden flag
+const launchedHidden = process.argv.includes('--hidden');
+if (launchedHidden) {
+  log.info('Application launched hidden');
+}
+
 app.whenReady().then(() => {
   electronApp.setAppUserModelId('com.tarnishedstella.keepaudioalive');
 
@@ -26,7 +32,7 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window);
   });
 
-  mainWindow = createMainWindow();
+  mainWindow = createMainWindow(launchedHidden);
   tray = createTray(mainWindow);
 
   mainWindow.on('minimize', (event) => {
@@ -42,7 +48,7 @@ app.whenReady().then(() => {
   });
 
   app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) mainWindow = createMainWindow();
+    if (BrowserWindow.getAllWindows().length === 0) mainWindow = createMainWindow(launchedHidden);
   });
 
   startMonitoring(mainWindow);

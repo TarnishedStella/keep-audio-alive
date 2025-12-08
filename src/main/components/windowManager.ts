@@ -3,7 +3,7 @@ import { join } from 'path';
 import { is } from '@electron-toolkit/utils';
 import icon from '../../../resources/icon.ico?asset';
 
-export function createMainWindow(): BrowserWindow {
+export function createMainWindow(isHidden: boolean): BrowserWindow {
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
@@ -22,7 +22,9 @@ export function createMainWindow(): BrowserWindow {
   });
 
   mainWindow.on('ready-to-show', () => {
-    mainWindow.show();
+    if (!isHidden) {
+      mainWindow.show();
+    }
   });
 
   mainWindow.webContents.setWindowOpenHandler((details) => {

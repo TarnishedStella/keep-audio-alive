@@ -4,6 +4,7 @@ import path from 'path';
 import { ApplicationSettings } from '@common/types';
 import { Logger } from '../../common/Logger';
 import { Channels } from '../../common/ipc';
+import { setAutoLaunch } from './autoLaunch';
 
 const settingsPath = path.join(app.getPath('userData'), 'settings.json');
 
@@ -25,6 +26,8 @@ export function loadSettings(): ApplicationSettings {
       inactivityTimer: 15,
       rememberLastState: true,
       devicesState: {},
+      launchOnStartup: false,
+      launchHidden: true,
     };
     saveSettings(defaultSettings);
     return defaultSettings;
@@ -36,6 +39,18 @@ export function loadSettings(): ApplicationSettings {
 
 export function saveSettings(settings: ApplicationSettings): void {
   Logger.debug(settings);
+
+  // Apply auto-launch setting if it changed
+  if (
+    currentSettings &&
+    (currentSettings.launchOnStartup !== settings.launchOnStartup ||
+      currentSettings.launchHidden !== settings.launchHidden)
+  ) {
+    setAutoLaunch(settings.launchOnStartup, settings.launchHidden).catch((err) =>
+      Logger.error('Failed to update auto-launch setting:', err),
+    );
+  }
+
   currentSettings = settings;
   try {
     fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
@@ -46,7 +61,20 @@ export function saveSettings(settings: ApplicationSettings): void {
 
 export function saveSettingsJson(settingsJson: string): void {
   Logger.debug(settingsJson);
-  currentSettings = JSON.parse(settingsJson);
+  const newSettings = JSON.parse(settingsJson);
+
+  // Apply auto-launch setting if it changed
+  if (
+    currentSettings &&
+    (currentSettings.launchOnStartup !== newSettings.launchOnStartup ||
+      currentSettings.launchHidden !== newSettings.launchHidden)
+  ) {
+    setAutoLaunch(newSettings.launchOnStartup, newSettings.launchHidden).catch((err) =>
+      Logger.error('Failed to update auto-launch setting:', err),
+    );
+  }
+
+  currentSettings = newSettings;
   try {
     fs.writeFileSync(settingsPath, settingsJson);
   } catch (error) {

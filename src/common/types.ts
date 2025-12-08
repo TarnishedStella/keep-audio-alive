@@ -3,6 +3,8 @@ export interface ApplicationSettings {
   inactivityTimer: number; // stored in minutes
   rememberLastState: boolean;
   devicesState: Record<string, IPlaybackStatus>;
+  launchOnStartup: boolean;
+  launchHidden: boolean;
 }
 
 export interface MediaDeviceInfoCustom {
