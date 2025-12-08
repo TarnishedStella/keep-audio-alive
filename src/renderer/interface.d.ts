@@ -9,6 +9,8 @@ export interface IElectronAPI {
   playingAudio: () => Promise<void>;
   notPlayingAudio: () => Promise<void>;
   downloadUpdate: () => Promise<void>;
+  getAutoLaunchEnabled: () => Promise<boolean>;
+  getLoginItemSettings: () => Promise<Electron.LoginItemSettings>;
 }
 
 declare global {

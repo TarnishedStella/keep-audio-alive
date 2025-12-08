@@ -2,10 +2,11 @@ import { app, BrowserWindow, ipcMain, Tray } from 'electron';
 import { electronApp, optimizer } from '@electron-toolkit/utils';
 import { createMainWindow } from './components/windowManager';
 import { createTray, updateIsPlaying, updateTrayContextMenu } from './components/tray';
-import { registerSettingsHandlers } from './components/settings';
+import { registerSettingsHandlers, initializeAutoLaunch } from './components/settings';
 import { startMonitoring } from './components/inactivity';
 import { setupLogging } from './components/logging';
 import { ConfigureAutomaticUpdates } from './components/automaticUpdates';
+import { getAutoLaunchStatus } from './components/autoLaunch';
 import { Channels } from '../common/ipc';
 
 const log = require('electron-log');
@@ -25,8 +26,16 @@ if (launchedHidden) {
   log.info('Application launched hidden');
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   electronApp.setAppUserModelId('com.tarnishedstella.keepaudioalive');
+
+  // Restore auto-launch setting BEFORE creating window/loading renderer
+  // This ensures the registry entry exists before renderer checks the status
+  try {
+    await initializeAutoLaunch();
+  } catch (err) {
+    log.error('Failed to restore auto-launch:', err);
+  }
 
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window);
@@ -80,4 +89,8 @@ ipcMain.handle(Channels.NOT_PLAYING_AUDIO, (event) => {
 
 ipcMain.handle(Channels.GET_APP_VERSION, async () => {
   return app.getVersion();
+});
+
+ipcMain.handle(Channels.GET_AUTO_LAUNCH_ENABLED, async () => {
+  return await getAutoLaunchStatus();
 });
