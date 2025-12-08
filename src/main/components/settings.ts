@@ -60,6 +60,7 @@ export function loadSettings(): ApplicationSettings {
       devicesState: {},
       launchOnStartup: false,
       launchHidden: true,
+      lastSeenVersion: app.getVersion(),
     };
     saveSettings(defaultSettings);
     return defaultSettings;
