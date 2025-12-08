@@ -4,12 +4,16 @@ import {
   setInactivityTimer,
   setInactivityToggle,
   setRememberLastStateToggle,
+  setLaunchOnStartupToggle,
+  setLaunchHiddenToggle,
 } from '@renderer/pages/settings/settingsSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import {
   selectInactivityTimer,
   selectIsInactivityToggled,
   selectIsRememberLastStateToggled,
+  selectIsLaunchOnStartupToggled,
+  selectIsLaunchHiddenToggled,
 } from '@renderer/pages/settings/selectors';
 import { useNavigate } from '@tanstack/react-router';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
@@ -25,6 +29,16 @@ const SettingsPage: React.FunctionComponent = (): ReactElement => {
   const idleDetectionTime = useAppSelector(selectInactivityTimer);
 
   const isRememberDeviceStateEnabled = useAppSelector(selectIsRememberLastStateToggled);
+  const isLaunchOnStartupEnabled = useAppSelector(selectIsLaunchOnStartupToggled);
+  const isLaunchHiddenEnabled = useAppSelector(selectIsLaunchHiddenToggled);
+
+  function handleLaunchOnStartupToggle(): void {
+    dispatch(setLaunchOnStartupToggle(!isLaunchOnStartupEnabled));
+  }
+
+  function handleLaunchHiddenToggle(): void {
+    dispatch(setLaunchHiddenToggle(!isLaunchHiddenEnabled));
+  }
 
   const dispatch = useAppDispatch();
 
@@ -113,6 +127,32 @@ const SettingsPage: React.FunctionComponent = (): ReactElement => {
                 name="Enable Idle Detection"
               />
             </Box>
+
+            <Flex>
+              <Box flexGrow="1">
+                <Text as="div" size="2" mb="0.5rem" weight="regular">
+                  Launch on Startup
+                </Text>
+                <Switch
+                  checked={isLaunchOnStartupEnabled}
+                  onCheckedChange={handleLaunchOnStartupToggle}
+                  name="Enable Launch on Startup"
+                />
+              </Box>
+
+              {isLaunchOnStartupEnabled && (
+                <Box flexGrow="5">
+                  <Text as="div" size="2" mb="0.5rem" weight="regular">
+                    Launch Hidden (to tray)
+                  </Text>
+                  <Switch
+                    checked={isLaunchHiddenEnabled}
+                    onCheckedChange={handleLaunchHiddenToggle}
+                    name="Launch Hidden"
+                  />
+                </Box>
+              )}
+            </Flex>
           </Flex>
         </div>
       </div>

@@ -42,6 +42,16 @@ export const settingsSlice = createSlice({
       state.devicesState = action.payload;
       saveCurrentState(state);
     },
+
+    setLaunchOnStartupToggle: (state, action) => {
+      state.launchOnStartup = action.payload;
+      saveCurrentState(state);
+    },
+
+    setLaunchHiddenToggle: (state, action) => {
+      state.launchHidden = action.payload;
+      saveCurrentState(state);
+    },
   },
 });
 
@@ -52,6 +62,8 @@ function saveCurrentState(state): void {
       inactivityToggle: state.inactivityToggle,
       rememberLastState: state.rememberLastState,
       devicesState: state.devicesState,
+      launchOnStartup: state.launchOnStartup,
+      launchHidden: state.launchHidden,
     } as ApplicationSettings;
     const settingsJson = JSON.stringify(tmp, null, 2);
     Logger.debug(settingsJson);
@@ -73,6 +85,8 @@ export const {
   setInactivityTimer,
   setRememberLastStateToggle,
   setDeviceStates,
+  setLaunchOnStartupToggle,
+  setLaunchHiddenToggle,
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

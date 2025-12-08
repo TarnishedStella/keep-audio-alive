@@ -2217,6 +2217,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/auto-launch@npm:^5":
+  version: 5.0.5
+  resolution: "@types/auto-launch@npm:5.0.5"
+  checksum: 10c0/c0aa0f1bd048a5f51cc8619b9599095a4908f6349f0e0192300de46f76280f2f35e011d7d2e69296732f5beca6ba484e0aa992b3374ff55741292c34f3c094ae
+  languageName: node
+  linkType: hard
+
 "@types/babel__core@npm:^7.20.5":
   version: 7.20.5
   resolution: "@types/babel__core@npm:7.20.5"
@@ -2710,6 +2717,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"applescript@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "applescript@npm:1.0.0"
+  checksum: 10c0/b535e7df97a3e1272d1b8e8c832494ba3933fbad879847cb83c8990c08aed5bcb097d2af200ba2e0754c3467c2367441706b7864173e1aa9ee4132f5189287f0
+  languageName: node
+  linkType: hard
+
 "argparse@npm:^2.0.1":
   version: 2.0.1
   resolution: "argparse@npm:2.0.1"
@@ -2863,6 +2877,19 @@ __metadata:
   version: 1.0.0
   resolution: "at-least-node@npm:1.0.0"
   checksum: 10c0/4c058baf6df1bc5a1697cf182e2029c58cd99975288a13f9e70068ef5d6f4e1f1fd7c4d2c3c4912eae44797d1725be9700995736deca441b39f3e66d8dee97ef
+  languageName: node
+  linkType: hard
+
+"auto-launch@npm:^5.0.6":
+  version: 5.0.6
+  resolution: "auto-launch@npm:5.0.6"
+  dependencies:
+    applescript: "npm:^1.0.0"
+    mkdirp: "npm:^0.5.1"
+    path-is-absolute: "npm:^1.0.0"
+    untildify: "npm:^3.0.2"
+    winreg: "npm:1.2.4"
+  checksum: 10c0/6eee118ba9f920a2cc8ed8a5ab0da6fb07a4bae9307af6b8133e79b4ecb007b10aa520b52051c44c28a973c3917b90eeb677882b05d05f1edfb25ffc86b9feac
   languageName: node
   linkType: hard
 
@@ -5312,10 +5339,12 @@ __metadata:
     "@tanstack/react-router": "npm:^1.48.1"
     "@tanstack/router-devtools": "npm:^1.48.1"
     "@tanstack/router-plugin": "npm:^1.47.0"
+    "@types/auto-launch": "npm:^5"
     "@types/node": "npm:^20.14.8"
     "@types/react": "npm:^18.3.3"
     "@types/react-dom": "npm:^18.3.0"
     "@vitejs/plugin-react": "npm:^4.3.1"
+    auto-launch: "npm:^5.0.6"
     electron: "npm:^31.0.2"
     electron-builder: "npm:^24.13.3"
     electron-log: "npm:^5.1.7"
@@ -5649,6 +5678,17 @@ __metadata:
     minipass: "npm:^3.0.0"
     yallist: "npm:^4.0.0"
   checksum: 10c0/64fae024e1a7d0346a1102bb670085b17b7f95bf6cfdf5b128772ec8faf9ea211464ea4add406a3a6384a7d87a0cd1a96263692134323477b4fb43659a6cab78
+  languageName: node
+  linkType: hard
+
+"mkdirp@npm:^0.5.1":
+  version: 0.5.6
+  resolution: "mkdirp@npm:0.5.6"
+  dependencies:
+    minimist: "npm:^1.2.6"
+  bin:
+    mkdirp: bin/cmd.js
+  checksum: 10c0/e2e2be789218807b58abced04e7b49851d9e46e88a2f9539242cc8a92c9b5c3a0b9bab360bd3014e02a140fc4fbc58e31176c408b493f8a2a6f4986bd7527b01
   languageName: node
   linkType: hard
 
@@ -7109,6 +7149,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"untildify@npm:^3.0.2":
+  version: 3.0.3
+  resolution: "untildify@npm:3.0.3"
+  checksum: 10c0/4c73e47320a97226e4f16f1764cd7d9ee62ec41458bd23244d3bd8f11800270d7603a9099586158dd6b911fa65f51713ced5f8a724bb73c7fa33fb3426bcb32d
+  languageName: node
+  linkType: hard
+
 "update-browserslist-db@npm:^1.1.0":
   version: 1.1.0
   resolution: "update-browserslist-db@npm:1.1.0"
@@ -7338,6 +7385,13 @@ __metadata:
   bin:
     node-which: bin/which.js
   checksum: 10c0/449fa5c44ed120ccecfe18c433296a4978a7583bf2391c50abce13f76878d2476defde04d0f79db8165bdf432853c1f8389d0485ca6e8ebce3bbcded513d5e6a
+  languageName: node
+  linkType: hard
+
+"winreg@npm:1.2.4":
+  version: 1.2.4
+  resolution: "winreg@npm:1.2.4"
+  checksum: 10c0/25a687332e51a1928a61e0689f51a9cae9c2ff0788e984334ef6cc286b571125de186195040f746a1b74e8668590acd1a2b17521ece94b57d3c15f8afc8b67b2
   languageName: node
   linkType: hard
 

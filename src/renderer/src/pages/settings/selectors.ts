@@ -11,3 +11,7 @@ export const selectIsRememberLastStateToggled = (state: RootState) =>
 
 export const selectDevicesState = (state: RootState): Record<string, IPlaybackStatus> =>
   state.settings.devicesState;
+
+export const selectIsLaunchOnStartupToggled = (state: RootState) => state.settings.launchOnStartup;
+
+export const selectIsLaunchHiddenToggled = (state: RootState) => state.settings.launchHidden;
